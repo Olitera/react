@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import SearchComponent from './components/search-component.tsx';
+import ResultsComponent from './components/results-component.tsx';
 
 class App extends React.Component {
   render() {
@@ -10,7 +11,9 @@ class App extends React.Component {
           <section className="top">
             <SearchComponent />
           </section>
-          <section className="bottom"></section>
+          <section className="bottom">
+            <ResultsComponent />
+          </section>
         </div>
       </>
     );
