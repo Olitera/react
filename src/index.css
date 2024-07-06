@@ -62,8 +62,9 @@ button:focus-visible {
 }
 
 .top {
+  /*padding: 15px;*/
   width: 100%;
-  height: 20%;
+  height: 10%;
   background-color: #ccc98f;
 }
 
@@ -71,6 +72,13 @@ button:focus-visible {
   width: 100%;
   height: 80%;
   background-color: #d2dee1;
+}
+
+.search-container {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: center;
 }
 
 @media (prefers-color-scheme: light) {

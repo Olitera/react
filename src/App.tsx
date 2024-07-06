@@ -1,20 +1,20 @@
 import React from 'react';
 import './App.css';
+import SearchComponent from './components/search-component.tsx';
 
-function App() {
-  const [count, setCount] = React.useState(0);
-  return (
-    <>
-      <div className="container">
-        <section className="top">
-          <button onClick={() => setCount(count => count + 1)}>
-            count is: {count}
-          </button>
-        </section>
-        <section className="bottom"></section>
-      </div>
-    </>
-  );
+class App extends React.Component {
+  render() {
+    return (
+      <>
+        <div className="container">
+          <section className="top">
+            <SearchComponent />
+          </section>
+          <section className="bottom"></section>
+        </div>
+      </>
+    );
+  }
 }
 
 export default App;
