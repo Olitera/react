@@ -4,12 +4,21 @@ import SearchComponent from './components/search-component.tsx';
 import ResultsComponent from './components/results-component.tsx';
 
 class App extends React.Component {
+  state = {
+    inputValue: '',
+  };
+
+  handleSearch = (inputValue: string) => {
+    this.setState({ inputValue });
+    console.log(inputValue);
+  };
+
   render() {
     return (
       <>
         <div className="container">
           <section className="top">
-            <SearchComponent />
+            <SearchComponent onSearch={this.handleSearch} />
           </section>
           <section className="bottom">
             <ResultsComponent />

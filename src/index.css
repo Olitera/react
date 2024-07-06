@@ -83,6 +83,7 @@ button:focus-visible {
 
 .results-container {
   border: #1a1a1a solid 1px;
+  height: 200px;
 }
 
 @media (prefers-color-scheme: light) {

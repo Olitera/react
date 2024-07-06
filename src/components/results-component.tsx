@@ -12,9 +12,21 @@ class ResultsComponent extends React.Component {
   searchPokemon = () => {
     const query = 'https://pokeapi.co/api/v2/pokemon?offset=${2}&limit=${10}';
 
-    fetch(query).then((res: unknown) => {
-      console.log(res);
-    });
+    fetch(query)
+      .then((res: Response) => {
+        console.log(res);
+        return res.json();
+      })
+      .then(
+        (data: {
+          count: number;
+          next: string;
+          previous: null;
+          results: { name: string; url: string }[];
+        }) => {
+          this.setState({ results: data.results });
+        }
+      );
   };
 
   render() {

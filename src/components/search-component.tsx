@@ -1,11 +1,37 @@
 import React from 'react';
 
-class SearchComponent extends React.Component {
+interface SearchComponentProps {
+  onSearch: (inputValue: string) => void;
+}
+
+interface SearchComponentState {
+  inputValue: string;
+}
+
+class SearchComponent extends React.Component<
+  SearchComponentProps,
+  SearchComponentState
+> {
+  constructor(props: SearchComponentProps) {
+    super(props);
+    this.state = {
+      inputValue: '',
+    };
+  }
+
+  handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ inputValue: e.target.value });
+  };
+
+  handleSearchClick = () => {
+    this.props.onSearch(this.state.inputValue);
+  };
+
   render() {
     return (
       <div className="search-container">
-        <input type="text" />
-        <button>Search</button>
+        <input type="text" onChange={this.handleInputChange} />
+        <button onClick={this.handleSearchClick}>Search</button>
       </div>
     );
   }
