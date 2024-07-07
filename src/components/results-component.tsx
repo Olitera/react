@@ -6,10 +6,9 @@ interface ResultsComponentProps {
 }
 
 interface ResultsComponentState {
-  results: unknown[];
+  results: IPokemon[];
   isLoaded: boolean;
   searchValue: string;
-  pokemon: IPokemon | null;
 }
 
 class ResultsComponent extends React.Component<
@@ -22,7 +21,6 @@ class ResultsComponent extends React.Component<
       results: [],
       isLoaded: true,
       searchValue: this.props.searchValue ?? '',
-      pokemon: null,
     };
   }
 
@@ -41,6 +39,7 @@ class ResultsComponent extends React.Component<
       ? 'https://pokeapi.co/api/v2/pokemon?offset=${2}&limit=${10}'
       : `https://pokeapi.co/api/v2/pokemon/${this.props.searchValue}`;
 
+    this.setState({ isLoaded: true });
     fetch(query)
       .then((res: Response) => {
         return res.json();
@@ -52,32 +51,36 @@ class ResultsComponent extends React.Component<
           this.getPokemon(data as IPokemon);
         }
       })
-      .catch(() => {
-        this.catchErrors();
-      });
+      .catch(this.catchErrors);
   };
 
   getPokemons(data: IPokemons) {
-    this.setState({ results: data.results, isLoaded: false, pokemon: null });
+    const query = data.results.map(item => item.url);
+    Promise.all(
+      query.map(item => {
+        return fetch(item).then(res => res.json());
+      })
+    )
+      .then(data => {
+        this.setState({ results: data, isLoaded: false });
+      })
+      .catch(this.catchErrors);
   }
 
   getPokemon(data: IPokemon) {
-    this.setState({ pokemon: data, isLoaded: false, results: [] });
+    this.setState({ isLoaded: false, results: [data] });
   }
 
-  catchErrors() {
-    this.setState({ pokemon: null, results: [], isLoaded: false });
-  }
+  catchErrors = () => {
+    this.setState({ results: [], isLoaded: false });
+  };
 
   render() {
-    const { results, pokemon } = this.state;
+    const { results } = this.state;
     if (this.state.isLoaded) {
       return <div>Loaded...</div>;
     }
-    if (pokemon) {
-      return <div className="results-container">{<h4>{pokemon.name}</h4>}</div>;
-    }
-    if (!pokemon && !results.length) {
+    if (!results.length) {
       return (
         <div>
           <h2>Pokemon with such name did not find</h2>
@@ -86,9 +89,12 @@ class ResultsComponent extends React.Component<
     }
     return (
       <div className="results-container">
-        {(results as { name: string }[]).map((result, i) => (
-          <div key={i} className="result-card">
-            <h4>{result.name}</h4>
+        {(results as IPokemon[]).map((pokemon, i) => (
+          <div className="result-card" key={i}>
+            <h4>{pokemon.name}</h4>
+            <img src={pokemon.sprites.front_default} alt={pokemon.name} />
+            <p>weight: {pokemon.weight}</p>
+            <p>height: {pokemon.height}</p>
           </div>
         ))}
       </div>

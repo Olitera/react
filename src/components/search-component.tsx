@@ -19,18 +19,31 @@ class SearchComponent extends React.Component<
     };
   }
 
+  componentDidMount() {
+    const inputValue = localStorage.getItem('search');
+    if (inputValue) {
+      this.setState({ inputValue });
+      this.props.onSearch(inputValue);
+    }
+  }
+
   handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ inputValue: e.target.value });
   };
 
   handleSearchClick = () => {
     this.props.onSearch(this.state.inputValue);
+    localStorage.setItem('search', this.state.inputValue);
   };
 
   render() {
     return (
       <div className="search-container">
-        <input type="text" onChange={this.handleInputChange} />
+        <input
+          type="text"
+          onChange={this.handleInputChange}
+          value={this.state.inputValue}
+        />
         <button onClick={this.handleSearchClick}>Search</button>
       </div>
     );

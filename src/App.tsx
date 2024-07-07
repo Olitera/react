@@ -10,7 +10,6 @@ class App extends React.Component {
 
   handleSearch = (inputValue: string) => {
     this.setState({ inputValue });
-    console.log(inputValue);
   };
 
   render() {
