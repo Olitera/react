@@ -21,7 +21,7 @@ class App extends React.Component {
             <SearchComponent onSearch={this.handleSearch} />
           </section>
           <section className="bottom">
-            <ResultsComponent />
+            <ResultsComponent searchValue={this.state.inputValue} />
           </section>
         </div>
       </>
