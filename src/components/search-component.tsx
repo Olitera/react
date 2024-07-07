@@ -23,7 +23,6 @@ class SearchComponent extends React.Component<
     const inputValue = localStorage.getItem('search');
     if (inputValue) {
       this.setState({ inputValue });
-      this.props.onSearch(inputValue);
     }
   }
 
