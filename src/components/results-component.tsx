@@ -1,60 +1,41 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { IPokemon, IPokemons } from '../interfaces/pokemons.ts';
 
 interface ResultsComponentProps {
   searchValue?: string;
 }
 
-interface ResultsComponentState {
-  results: IPokemon[];
-  isLoaded: boolean;
-  searchValue: string;
-}
+const ResultsComponent: React.FC<ResultsComponentProps> = ({
+  searchValue = '',
+}) => {
+  const [results, setResults] = React.useState<IPokemon[]>([]);
+  const [isLoaded, setIsLoaded] = React.useState<boolean>(false);
 
-class ResultsComponent extends React.Component<
-  ResultsComponentProps,
-  ResultsComponentState
-> {
-  constructor(props: ResultsComponentProps) {
-    super(props);
-    this.state = {
-      results: [],
-      isLoaded: true,
-      searchValue: this.props.searchValue ?? '',
-    };
-  }
+  useEffect(() => {
+    searchPokemon();
+  }, [searchValue]);
 
-  componentDidMount() {
-    this.searchPokemon();
-  }
-
-  componentDidUpdate(prevProps: Readonly<ResultsComponentProps>) {
-    if (this.props.searchValue !== prevProps.searchValue) {
-      this.searchPokemon();
-    }
-  }
-
-  searchPokemon = () => {
-    const query = !this.props.searchValue
+  const searchPokemon = () => {
+    const query = !searchValue
       ? 'https://pokeapi.co/api/v2/pokemon?offset=${2}&limit=${10}'
-      : `https://pokeapi.co/api/v2/pokemon/${this.props.searchValue}`;
+      : `https://pokeapi.co/api/v2/pokemon/${searchValue}`;
 
-    this.setState({ isLoaded: true });
+    setIsLoaded(true);
     fetch(query)
       .then((res: Response) => {
         return res.json();
       })
       .then((data: IPokemons | IPokemon) => {
         if ('results' in data) {
-          this.getPokemons(data as IPokemons);
+          getPokemons(data as IPokemons);
         } else {
-          this.getPokemon(data as IPokemon);
+          getPokemon(data as IPokemon);
         }
       })
-      .catch(this.catchErrors);
+      .catch(catchErrors);
   };
 
-  getPokemons(data: IPokemons) {
+  const getPokemons = (data: IPokemons) => {
     const query = data.results.map(item => item.url);
     Promise.all(
       query.map(item => {
@@ -62,44 +43,44 @@ class ResultsComponent extends React.Component<
       })
     )
       .then(data => {
-        this.setState({ results: data, isLoaded: false });
+        setResults(data);
+        setIsLoaded(false);
       })
-      .catch(this.catchErrors);
-  }
-
-  getPokemon(data: IPokemon) {
-    this.setState({ isLoaded: false, results: [data] });
-  }
-
-  catchErrors = () => {
-    this.setState({ results: [], isLoaded: false });
+      .catch(catchErrors);
   };
 
-  render() {
-    const { results } = this.state;
-    if (this.state.isLoaded) {
-      return <div>Loaded...</div>;
-    }
-    if (!results.length) {
-      return (
-        <div>
-          <h2>Pokemon with such name did not find</h2>
-        </div>
-      );
-    }
+  const getPokemon = (data: IPokemon) => {
+    setResults([data]);
+    setIsLoaded(false);
+  };
+
+  const catchErrors = () => {
+    setResults([]);
+    setIsLoaded(false);
+  };
+
+  if (isLoaded) {
+    return <div>Loaded...</div>;
+  }
+  if (!results.length) {
     return (
-      <div className="results-container">
-        {(results as IPokemon[]).map((pokemon, i) => (
-          <div className="result-card" key={i}>
-            <h4>{pokemon.name}</h4>
-            <img src={pokemon.sprites.front_default} alt={pokemon.name} />
-            <p>weight: {pokemon.weight}</p>
-            <p>height: {pokemon.height}</p>
-          </div>
-        ))}
+      <div>
+        <h2>Pokemon with such name did not find</h2>
       </div>
     );
   }
-}
+  return (
+    <div className="results-container">
+      {(results as IPokemon[]).map((pokemon, i) => (
+        <div className="result-card" key={i}>
+          <h4>{pokemon.name}</h4>
+          <img src={pokemon.sprites.front_default} alt={pokemon.name} />
+          <p>weight: {pokemon.weight}</p>
+          <p>height: {pokemon.height}</p>
+        </div>
+      ))}
+    </div>
+  );
+};
 
 export default ResultsComponent;
