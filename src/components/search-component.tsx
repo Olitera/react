@@ -4,30 +4,51 @@ interface SearchComponentProps {
   onSearch: (inputValue: string) => void;
 }
 
-const SearchComponent: React.FC<SearchComponentProps> = ({ onSearch }) => {
-  const [inputValue, setInputValue] = React.useState('');
+interface SearchComponentProps {
+  inputValue?: string;
+}
+
+const SearchComponent: React.FC<SearchComponentProps> = ({
+  onSearch,
+  inputValue = '',
+}) => {
+  // const [searchValue, setSearchValue] = React.useState<string>(inputValue);
+  const inputRef = React.useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    const searchValue = localStorage.getItem('search');
-    if (searchValue) {
-      setInputValue(searchValue);
+    const input = inputRef.current;
+    if (input) {
+      input.value = inputValue;
     }
   }, []);
+  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setInputValue(e.target.value);
+  // };
+  //
+  // const handleSearchClick = () => {
+  //   onSearch(inputValue);
+  // };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
-  };
-
-  const handleSearchClick = () => {
-    onSearch(inputValue);
-    localStorage.setItem('search', inputValue);
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    const input = inputRef.current;
+    if (input) {
+      // setSearchValue('eeeee');
+      // console.log(searchValue, 'searchValue', input.value);
+      // setTimeout(() => {console.log(searchValue, 'searchValue', input.value);});
+      onSearch(input.value);
+    }
   };
 
   return (
-    <div className="search-container">
-      <input type="text" onChange={handleInputChange} value={inputValue} />
-      <button onClick={handleSearchClick}>Search</button>
-    </div>
+    // <form onSubmit={handleSearch} className="search-container">
+    //   <input type="text" onChange={handleInputChange} value={inputValue} />
+    //   <button onClick={handleSearchClick}>Search</button>
+    // </form>
+    <form onSubmit={handleSearch} className="search-container">
+      <input type="text" ref={inputRef} />
+      <button>Search</button>
+    </form>
   );
 };
 
