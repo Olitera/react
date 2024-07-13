@@ -70,15 +70,17 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
     );
   }
   return (
-    <div className="results-container">
-      {(results as IPokemon[]).map((pokemon, i) => (
-        <div className="result-card" key={i}>
-          <h4>{pokemon.name}</h4>
-          <img src={pokemon.sprites.front_default} alt={pokemon.name} />
-          <p>weight: {pokemon.weight}</p>
-          <p>height: {pokemon.height}</p>
-        </div>
-      ))}
+    <div className="bottom">
+      <div className="results-container">
+        {(results as IPokemon[]).map((pokemon, i) => (
+          <div className="result-card" key={i}>
+            <h4>{pokemon.name}</h4>
+            <img src={pokemon.sprites.front_default} alt={pokemon.name} />
+            <p>weight: {pokemon.weight}</p>
+            <p>height: {pokemon.height}</p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

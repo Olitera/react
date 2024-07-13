@@ -3,6 +3,8 @@ import './App.css';
 import SearchComponent from './components/search-component.tsx';
 import ResultsComponent from './components/results-component.tsx';
 import useLocalStorageHook from './hooks/local-storage-hook.tsx';
+import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
+import NotFoundComponent from './components/not-found-component.tsx';
 
 const App: React.FC = () => {
   // const [inputValue, setInputValue] = React.useState('')
@@ -13,16 +15,21 @@ const App: React.FC = () => {
   };
 
   return (
-    <>
-      <div className="container">
+    <div className="container">
+      <BrowserRouter>
         <section className="top">
           <SearchComponent onSearch={handleSearch} inputValue={inputValue} />
         </section>
-        <section className="bottom">
-          <ResultsComponent searchValue={inputValue} />
-        </section>
-      </div>
-    </>
+        <Routes>
+          <Route path="/" element={<Navigate to="/search" />} />
+          <Route
+            path="/search"
+            element={<ResultsComponent searchValue={inputValue} />}
+          />
+          <Route path="*" element={<NotFoundComponent />} />
+        </Routes>
+      </BrowserRouter>
+    </div>
   );
 };
 
