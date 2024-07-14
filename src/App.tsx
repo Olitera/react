@@ -1,11 +1,11 @@
 import React from 'react';
 import './App.css';
 import SearchComponent from './components/search-component.tsx';
-import ResultsComponent from './components/results-component.tsx';
 import useLocalStorageHook from './hooks/local-storage-hook.tsx';
-import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import NotFoundComponent from './components/not-found-component.tsx';
 import DetailsComponent from './components/details-component.tsx';
+import MainComponent from './components/main-component.tsx';
 
 const App: React.FC = () => {
   const [inputValue, setInputValue] = useLocalStorageHook('');
@@ -24,21 +24,10 @@ const App: React.FC = () => {
           <Route path="/" element={<Navigate to="/search" />} />
           <Route
             path="/search"
-            element={
-              <div style={{ display: 'flex' }}>
-                <ResultsComponent searchValue={inputValue}></ResultsComponent>
-              </div>
-            }
-          />
-          <Route
-            path="/details/:id"
-            element={
-              <div style={{ display: 'flex' }}>
-                <ResultsComponent searchValue={inputValue}></ResultsComponent>
-                <DetailsComponent />
-              </div>
-            }
-          />
+            element={<MainComponent searchValue={inputValue} />}
+          >
+            <Route path="details/:id" element={<DetailsComponent />} />
+          </Route>
           <Route path="*" element={<NotFoundComponent />} />
         </Routes>
       </BrowserRouter>

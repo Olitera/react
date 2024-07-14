@@ -62,7 +62,7 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
   };
 
   const handleClick = (id: number) => {
-    navigate(`/details/${id}`);
+    navigate(`details/${id}`);
   };
 
   if (isLoaded) {

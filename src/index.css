@@ -74,6 +74,16 @@ button:focus-visible {
   box-sizing: border-box;
 }
 
+.main-container {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+}
+
+.detailed-section {
+  /*padding: 15px;*/
+}
+
 .search-container {
   display: flex;
   flex-direction: row;
