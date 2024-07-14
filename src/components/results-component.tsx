@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { IPokemon, IPokemons } from '../interfaces/pokemons.ts';
+import { useNavigate } from 'react-router-dom';
 
 interface ResultsComponentProps {
   searchValue?: string;
@@ -10,6 +11,7 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
 }) => {
   const [results, setResults] = React.useState<IPokemon[]>([]);
   const [isLoaded, setIsLoaded] = React.useState<boolean>(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     searchPokemon();
@@ -59,6 +61,10 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
     setIsLoaded(false);
   };
 
+  const handleClick = (id: number) => {
+    navigate(`/details/${id}`);
+  };
+
   if (isLoaded) {
     return <div>Loaded...</div>;
   }
@@ -73,7 +79,11 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
     <div className="bottom">
       <div className="results-container">
         {(results as IPokemon[]).map((pokemon, i) => (
-          <div className="result-card" key={i}>
+          <div
+            className="result-card"
+            key={i}
+            onClick={() => handleClick(pokemon.order)}
+          >
             <h4>{pokemon.name}</h4>
             <img src={pokemon.sprites.front_default} alt={pokemon.name} />
             <p>weight: {pokemon.weight}</p>

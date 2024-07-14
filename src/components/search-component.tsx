@@ -45,10 +45,17 @@ const SearchComponent: React.FC<SearchComponentProps> = ({
     //   <input type="text" onChange={handleInputChange} value={inputValue} />
     //   <button onClick={handleSearchClick}>Search</button>
     // </form>
+    // <form onSubmit={handleSearch} className="search-container">
+
     <form onSubmit={handleSearch} className="search-container">
       <input type="text" ref={inputRef} />
       <button>Search</button>
     </form>
+
+    // <div className="search-container">
+    //   <input type="text" ref={inputRef} value={searchValue} />
+    //   <button onClick={handleSearch}>Search</button>
+    // </div>
   );
 };
 
