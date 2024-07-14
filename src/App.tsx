@@ -8,7 +8,6 @@ import NotFoundComponent from './components/not-found-component.tsx';
 import DetailsComponent from './components/details-component.tsx';
 
 const App: React.FC = () => {
-  // const [inputValue, setInputValue] = React.useState('')
   const [inputValue, setInputValue] = useLocalStorageHook('');
 
   const handleSearch = (inputValue: string) => {
@@ -25,9 +24,21 @@ const App: React.FC = () => {
           <Route path="/" element={<Navigate to="/search" />} />
           <Route
             path="/search"
-            element={<ResultsComponent searchValue={inputValue} />}
+            element={
+              <div style={{ display: 'flex' }}>
+                <ResultsComponent searchValue={inputValue}></ResultsComponent>
+              </div>
+            }
           />
-          <Route path="/details/:id" element={<DetailsComponent />} />
+          <Route
+            path="/details/:id"
+            element={
+              <div style={{ display: 'flex' }}>
+                <ResultsComponent searchValue={inputValue}></ResultsComponent>
+                <DetailsComponent />
+              </div>
+            }
+          />
           <Route path="*" element={<NotFoundComponent />} />
         </Routes>
       </BrowserRouter>

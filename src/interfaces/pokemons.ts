@@ -14,4 +14,5 @@ export interface IPokemon {
   height: number;
   name: string;
   order: number;
+  id: number;
 }

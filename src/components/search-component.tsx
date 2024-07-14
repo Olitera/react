@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface SearchComponentProps {
   onSearch: (inputValue: string) => void;
@@ -12,50 +13,23 @@ const SearchComponent: React.FC<SearchComponentProps> = ({
   onSearch,
   inputValue = '',
 }) => {
-  // const [searchValue, setSearchValue] = React.useState<string>(inputValue);
-  const inputRef = React.useRef<HTMLInputElement | null>(null);
+  const [searchValue, setSearchValue] = React.useState<string>(inputValue);
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    const input = inputRef.current;
-    if (input) {
-      input.value = inputValue;
-    }
-  }, []);
-  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setInputValue(e.target.value);
-  // };
-  //
-  // const handleSearchClick = () => {
-  //   onSearch(inputValue);
-  // };
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(e.target.value);
+  };
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    const input = inputRef.current;
-    if (input) {
-      // setSearchValue('eeeee');
-      // console.log(searchValue, 'searchValue', input.value);
-      // setTimeout(() => {console.log(searchValue, 'searchValue', input.value);});
-      onSearch(input.value);
-    }
+  const handleSearch = () => {
+    onSearch(searchValue);
+    navigate(`/search`);
   };
 
   return (
-    // <form onSubmit={handleSearch} className="search-container">
-    //   <input type="text" onChange={handleInputChange} value={inputValue} />
-    //   <button onClick={handleSearchClick}>Search</button>
-    // </form>
-    // <form onSubmit={handleSearch} className="search-container">
-
-    <form onSubmit={handleSearch} className="search-container">
-      <input type="text" ref={inputRef} />
-      <button>Search</button>
-    </form>
-
-    // <div className="search-container">
-    //   <input type="text" ref={inputRef} value={searchValue} />
-    //   <button onClick={handleSearch}>Search</button>
-    // </div>
+    <div className="search-container">
+      <input type="text" value={searchValue} onChange={handleInputChange} />
+      <button onClick={handleSearch}>Search</button>
+    </div>
   );
 };
 

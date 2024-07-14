@@ -82,7 +82,7 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
           <div
             className="result-card"
             key={i}
-            onClick={() => handleClick(pokemon.order)}
+            onClick={() => handleClick(pokemon.id)}
           >
             <h4>{pokemon.name}</h4>
             <img src={pokemon.sprites.front_default} alt={pokemon.name} />
