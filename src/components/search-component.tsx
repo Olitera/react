@@ -22,7 +22,7 @@ const SearchComponent: React.FC<SearchComponentProps> = ({
 
   const handleSearch = () => {
     onSearch(searchValue);
-    navigate(`/search`);
+    navigate(`/search/1`);
   };
 
   return (

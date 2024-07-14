@@ -67,6 +67,9 @@ button:focus-visible {
 }
 
 .bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
   flex-grow: 1;
   background-color: #d2dee1;
@@ -80,8 +83,13 @@ button:focus-visible {
   flex-direction: row;
 }
 
-.detailed-section {
-  /*padding: 15px;*/
+.detailed-page {
+  width: 100vw;
+  max-width: 300px;
+  padding: 15px;
+  position: sticky;
+  top: 0;
+  right: 0;
 }
 
 .search-container {
@@ -96,6 +104,7 @@ button:focus-visible {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  justify-content: center;
   overflow: scroll;
   align-items: center;
   gap: 10px;
@@ -107,6 +116,15 @@ button:focus-visible {
   border: solid 1px #1a1a1a;
   border-radius: 10px;
   align-self: flex-start;
+  aspect-ratio: 1;
+}
+
+.pagination {
+  padding: 15px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 10px;
 }
 
 @media (prefers-color-scheme: light) {

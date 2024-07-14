@@ -21,9 +21,10 @@ const App: React.FC = () => {
           <SearchComponent onSearch={handleSearch} inputValue={inputValue} />
         </section>
         <Routes>
-          <Route path="/" element={<Navigate to="/search" />} />
+          <Route path="/" element={<Navigate to="/search/1" />} />
           <Route
-            path="/search"
+            // path="/search"
+            path="/search/:search"
             element={<MainComponent searchValue={inputValue} />}
           >
             <Route path="details/:id" element={<DetailsComponent />} />

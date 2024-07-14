@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { IPokemon, IPokemons } from '../interfaces/pokemons.ts';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 interface ResultsComponentProps {
   searchValue?: string;
@@ -11,15 +11,23 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
 }) => {
   const [results, setResults] = React.useState<IPokemon[]>([]);
   const [isLoaded, setIsLoaded] = React.useState<boolean>(false);
+  const [isNextDisabled, setIsNextDisabled] = React.useState<boolean>(false);
   const navigate = useNavigate();
+  const [page, setPage] = React.useState<number>(1);
+  const location = useLocation();
+
+  const { search } = useParams<{ search: string }>();
 
   useEffect(() => {
-    searchPokemon();
-  }, [searchValue]);
+    const pageParam = parseInt(search || '1', 10);
+    setPage(pageParam);
+    searchPokemon(pageParam);
+  }, [location.search, searchValue, search]);
 
-  const searchPokemon = () => {
+  const searchPokemon = (page: number) => {
+    const offset = (page - 1) * 20;
     const query = !searchValue
-      ? 'https://pokeapi.co/api/v2/pokemon?offset=${2}&limit=${10}'
+      ? `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${20}`
       : `https://pokeapi.co/api/v2/pokemon/${searchValue}`;
 
     setIsLoaded(true);
@@ -29,8 +37,10 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
       })
       .then((data: IPokemons | IPokemon) => {
         if ('results' in data) {
+          setIsNextDisabled(!data.next);
           getPokemons(data as IPokemons);
         } else {
+          setIsNextDisabled(!isNextDisabled);
           getPokemon(data as IPokemon);
         }
       })
@@ -65,6 +75,10 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
     navigate(`details/${id}`);
   };
 
+  const handlePageChange = (newPage: number) => {
+    navigate(`/search/${newPage}`);
+  };
+
   if (isLoaded) {
     return <div>Loaded...</div>;
   }
@@ -82,7 +96,10 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
           <div
             className="result-card"
             key={i}
-            onClick={() => handleClick(pokemon.id)}
+            onClick={e => {
+              e.stopPropagation();
+              handleClick(pokemon.id);
+            }}
           >
             <h4>{pokemon.name}</h4>
             <img src={pokemon.sprites.front_default} alt={pokemon.name} />
@@ -90,6 +107,27 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
             <p>height: {pokemon.height}</p>
           </div>
         ))}
+      </div>
+      <div className="pagination">
+        <button
+          onClick={e => {
+            e.stopPropagation();
+            handlePageChange(page - 1);
+          }}
+          disabled={page === 1}
+        >
+          Previous
+        </button>
+        <span>Page {page}</span>
+        <button
+          onClick={e => {
+            e.stopPropagation();
+            handlePageChange(page + 1);
+          }}
+          disabled={isNextDisabled}
+        >
+          Next
+        </button>
       </div>
     </div>
   );

@@ -3,7 +3,7 @@ import { IPokemon } from '../interfaces/pokemons';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const DetailsComponent: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id, search } = useParams<{ id: string; search: string }>();
   const [pokemon, setPokemon] = React.useState<IPokemon | null>(null);
   const [isLoaded, setIsLoaded] = React.useState<boolean>(false);
   const navigate = useNavigate();
@@ -19,10 +19,10 @@ const DetailsComponent: React.FC = () => {
         setIsLoaded(false);
       })
       .catch(() => setIsLoaded(false));
-  }, [id]);
+  }, [id, search]);
 
   const handleClose = () => {
-    navigate('/search');
+    navigate(`/search/${search}`);
   };
 
   if (isLoaded) {
@@ -32,7 +32,7 @@ const DetailsComponent: React.FC = () => {
     return <div>Failed to load Pokemon details.</div>;
   }
   return (
-    <div>
+    <div className="detailed-page">
       <button onClick={handleClose}>Close</button>
       <h4>{pokemon.name}</h4>
       <img src={pokemon.sprites.front_default} alt={pokemon.name} />
