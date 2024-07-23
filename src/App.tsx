@@ -23,7 +23,6 @@ const App: React.FC = () => {
         <Routes>
           <Route path="/" element={<Navigate to="/search/1" />} />
           <Route
-            // path="/search"
             path="/search/:search"
             element={<MainComponent searchValue={inputValue} />}
           >
