@@ -1,11 +1,15 @@
-import { configureStore } from '@reduxjs/toolkit';
-import pokemonReducer, { fetchPokemonsStart } from '../slices/pokemon-slice.ts';
+import { configureStore, Middleware } from '@reduxjs/toolkit';
+import pokemonReducer from '../slices/pokemonSlice.ts';
+import { pokemonApi } from '../services/pokemonApi.ts';
 
 export const store = configureStore({
   reducer: {
     pokemon: pokemonReducer,
   },
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware().concat(pokemonApi.middleware as Middleware),
 });
 
-store.subscribe(() => console.log(store.getState()));
-store.dispatch(fetchPokemonsStart());
+export type AppStore = typeof store;
+export type RootState = ReturnType<AppStore['getState']>;
+export type AppDispatch = AppStore['dispatch'];

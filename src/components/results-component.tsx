@@ -15,7 +15,6 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
   const navigate = useNavigate();
   const [page, setPage] = React.useState<number>(1);
   const location = useLocation();
-
   const { search } = useParams<{ search: string }>();
 
   useEffect(() => {
