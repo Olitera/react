@@ -9,7 +9,6 @@ import MainComponent from './components/main-component.tsx';
 
 const App: React.FC = () => {
   const [inputValue, setInputValue] = useLocalStorageHook('');
-
   const handleSearch = (inputValue: string) => {
     setInputValue(inputValue);
   };

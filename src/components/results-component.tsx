@@ -1,6 +1,9 @@
 import React, { useEffect } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useGetPokemonsQuery } from '../services/pokemonApi.ts';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../store/store.ts';
+import { selectItem, unselectItem } from '../slices/pokemon-slice.ts';
 
 interface ResultsComponentProps {
   searchValue?: string;
@@ -17,6 +20,10 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
     page,
     searchValue,
   });
+  const dispatch = useDispatch();
+  const selectedItems = useSelector(
+    (state: RootState) => state.pokemon.selectedItems
+  );
 
   useEffect(() => {
     const pageParam = parseInt(search || '1', 10);
@@ -29,6 +36,14 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
 
   const handlePageChange = (newPage: number) => {
     navigate(`/search/${newPage}`);
+  };
+
+  const handleCheckboxChange = (id: number) => {
+    if (selectedItems.includes(id)) {
+      dispatch(unselectItem(id));
+    } else {
+      dispatch(selectItem(id));
+    }
   };
 
   if (isFetching) {
@@ -64,6 +79,8 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
             <form>
               <input
                 type="checkbox"
+                checked={selectedItems.includes(pokemon.id)}
+                onChange={() => handleCheckboxChange(pokemon.id)}
                 onClick={e => {
                   e.stopPropagation();
                 }}

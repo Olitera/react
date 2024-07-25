@@ -1,5 +1,5 @@
 import { configureStore, Middleware } from '@reduxjs/toolkit';
-import pokemonReducer from '../slices/pokemonSlice.ts';
+import pokemonReducer from '../slices/pokemon-slice.ts';
 import { pokemonApi } from '../services/pokemonApi.ts';
 
 export const store = configureStore({
