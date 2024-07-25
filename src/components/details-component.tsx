@@ -1,43 +1,29 @@
 import React from 'react';
-import { IPokemon } from '../interfaces/pokemons';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useGetPokemonByIdQuery } from '../services/pokemonApi.ts';
 
 const DetailsComponent: React.FC = () => {
   const { id, search } = useParams<{ id: string; search: string }>();
-  const [pokemon, setPokemon] = React.useState<IPokemon | null>(null);
-  const [isLoaded, setIsLoaded] = React.useState<boolean>(false);
   const navigate = useNavigate();
-
-  React.useEffect(() => {
-    setIsLoaded(true);
-    fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
-      .then((res: Response) => {
-        return res.json();
-      })
-      .then((data: IPokemon) => {
-        setPokemon(data);
-        setIsLoaded(false);
-      })
-      .catch(() => setIsLoaded(false));
-  }, [id, search]);
+  const { data, isLoading } = useGetPokemonByIdQuery(id);
 
   const handleClose = () => {
     navigate(`/search/${search}`);
   };
 
-  if (isLoaded) {
+  if (isLoading) {
     return <div>Loading...</div>;
   }
-  if (!pokemon) {
+  if (!data) {
     return <div>Failed to load Pokemon details.</div>;
   }
   return (
     <div className="detailed-page">
       <button onClick={handleClose}>Close</button>
-      <h4>{pokemon.name}</h4>
-      <img src={pokemon.sprites.front_default} alt={pokemon.name} />
-      <p>weight: {pokemon.weight}</p>
-      <p>height: {pokemon.height}</p>
+      <h4>{data.name}</h4>
+      <img src={data.sprites.front_default} alt={data.name} />
+      <p>weight: {data.weight}</p>
+      <p>height: {data.height}</p>
     </div>
   );
 };
