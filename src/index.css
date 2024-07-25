@@ -78,6 +78,11 @@ button:focus-visible {
 }
 
 .main-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.pokemons-container {
   box-sizing: border-box;
   display: flex;
   flex-direction: row;
@@ -125,6 +130,15 @@ button:focus-visible {
   flex-direction: row;
   align-items: center;
   column-gap: 10px;
+}
+
+.selected-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  background: #ccc98f;
 }
 
 @media (prefers-color-scheme: light) {

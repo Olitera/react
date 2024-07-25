@@ -61,6 +61,14 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
             <img src={pokemon.sprites.front_default} alt={pokemon.name} />
             <p>weight: {pokemon.weight}</p>
             <p>height: {pokemon.height}</p>
+            <form>
+              <input
+                type="checkbox"
+                onClick={e => {
+                  e.stopPropagation();
+                }}
+              />
+            </form>
           </div>
         ))}
       </div>
