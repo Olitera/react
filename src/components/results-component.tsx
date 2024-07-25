@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import { IPokemon, IPokemons } from '../interfaces/pokemons.ts';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useGetPokemonsQuery } from '../services/pokemonApi.ts';
 
 interface ResultsComponentProps {
   searchValue?: string;
@@ -9,66 +9,17 @@ interface ResultsComponentProps {
 const ResultsComponent: React.FC<ResultsComponentProps> = ({
   searchValue = '',
 }) => {
-  const [results, setResults] = React.useState<IPokemon[]>([]);
-  const [isLoaded, setIsLoaded] = React.useState<boolean>(false);
-  const [isNextDisabled, setIsNextDisabled] = React.useState<boolean>(false);
+  const [isNextDisabled] = React.useState<boolean>(false);
   const navigate = useNavigate();
   const [page, setPage] = React.useState<number>(1);
   const location = useLocation();
   const { search } = useParams<{ search: string }>();
+  const { isFetching, data, error } = useGetPokemonsQuery(page);
 
   useEffect(() => {
     const pageParam = parseInt(search || '1', 10);
     setPage(pageParam);
-    searchPokemon(pageParam);
   }, [location.search, searchValue, search]);
-
-  const searchPokemon = (page: number) => {
-    const offset = (page - 1) * 20;
-    const query = !searchValue
-      ? `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${20}`
-      : `https://pokeapi.co/api/v2/pokemon/${searchValue}`;
-
-    setIsLoaded(true);
-    fetch(query)
-      .then((res: Response) => {
-        return res.json();
-      })
-      .then((data: IPokemons | IPokemon) => {
-        if ('results' in data) {
-          setIsNextDisabled(!data.next);
-          getPokemons(data as IPokemons);
-        } else {
-          setIsNextDisabled(!isNextDisabled);
-          getPokemon(data as IPokemon);
-        }
-      })
-      .catch(catchErrors);
-  };
-
-  const getPokemons = (data: IPokemons) => {
-    const query = data.results.map(item => item.url);
-    Promise.all(
-      query.map(item => {
-        return fetch(item).then(res => res.json());
-      })
-    )
-      .then(data => {
-        setResults(data);
-        setIsLoaded(false);
-      })
-      .catch(catchErrors);
-  };
-
-  const getPokemon = (data: IPokemon) => {
-    setResults([data]);
-    setIsLoaded(false);
-  };
-
-  const catchErrors = () => {
-    setResults([]);
-    setIsLoaded(false);
-  };
 
   const handleClick = (id: number) => {
     navigate(`details/${id}`);
@@ -78,10 +29,14 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
     navigate(`/search/${newPage}`);
   };
 
-  if (isLoaded) {
-    return <div>Loaded...</div>;
+  if (isFetching) {
+    return <div>Loading...</div>;
   }
-  if (!results.length) {
+  if (error) {
+    return <div>Error: something went wrong</div>;
+  }
+
+  if (!data?.results || data?.results.length === 0) {
     return (
       <div>
         <h2>Pokemon with such name did not find</h2>
@@ -91,7 +46,7 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
   return (
     <div className="bottom">
       <div className="results-container">
-        {(results as IPokemon[]).map((pokemon, i) => (
+        {data.results.map((pokemon, i) => (
           <div
             className="result-card"
             key={i}
