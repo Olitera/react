@@ -11,19 +11,37 @@ export const pokemonApi = createApi({
     baseUrl: 'https://pokeapi.co/api/v2/',
   }),
   endpoints: builder => ({
-    getPokemons: builder.query<IPokemonsResponse, number>({
-      query: page => `pokemon?offset=${page * 20}&limit=20`,
-      transformResponse: (response: IPokemons) => {
+    getPokemons: builder.query<
+      IPokemonsResponse,
+      { page: number; searchValue: string }
+    >({
+      query: ({ page, searchValue }) => {
+        return searchValue
+          ? `https://pokeapi.co/api/v2/pokemon/${searchValue}`
+          : `pokemon?offset=${page * 20}&limit=20`;
+      },
+      transformResponse: async (response: IPokemons | IPokemon) => {
+        if ('id' in response) {
+          return new Promise(resolve =>
+            resolve({
+              count: 1,
+              next: '',
+              previous: null,
+              results: [response],
+            })
+          );
+        }
+
         const fetchPokemonData = async () => {
           const pokemonData = await Promise.all(
-            response.results.map(async item => {
+            (response as IPokemons).results.map(async item => {
               const result = await fetch(item.url);
               return await result.json();
             })
           );
           return { ...response, results: pokemonData };
         };
-        return fetchPokemonData();
+        return await fetchPokemonData();
       },
     }),
     getPokemonById: builder.query<IPokemon, string | undefined>({

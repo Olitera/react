@@ -9,12 +9,14 @@ interface ResultsComponentProps {
 const ResultsComponent: React.FC<ResultsComponentProps> = ({
   searchValue = '',
 }) => {
-  const [isNextDisabled] = React.useState<boolean>(false);
   const navigate = useNavigate();
   const [page, setPage] = React.useState<number>(1);
   const location = useLocation();
   const { search } = useParams<{ search: string }>();
-  const { isFetching, data, error } = useGetPokemonsQuery(page);
+  const { isFetching, data, error } = useGetPokemonsQuery({
+    page,
+    searchValue,
+  });
 
   useEffect(() => {
     const pageParam = parseInt(search || '1', 10);
@@ -78,7 +80,7 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
             e.stopPropagation();
             handlePageChange(page + 1);
           }}
-          disabled={isNextDisabled}
+          disabled={!data.next}
         >
           Next
         </button>

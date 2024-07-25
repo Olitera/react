@@ -5,7 +5,7 @@ import { useGetPokemonByIdQuery } from '../services/pokemonApi.ts';
 const DetailsComponent: React.FC = () => {
   const { id, search } = useParams<{ id: string; search: string }>();
   const navigate = useNavigate();
-  const { data, isLoading } = useGetPokemonByIdQuery(id);
+  const { data, isLoading, error } = useGetPokemonByIdQuery(id);
 
   const handleClose = () => {
     navigate(`/search/${search}`);
@@ -13,6 +13,9 @@ const DetailsComponent: React.FC = () => {
 
   if (isLoading) {
     return <div>Loading...</div>;
+  }
+  if (error) {
+    return <div>Error: something went wrong</div>;
   }
   if (!data) {
     return <div>Failed to load Pokemon details.</div>;
