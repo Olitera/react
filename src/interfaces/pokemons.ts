@@ -28,6 +28,12 @@ export interface IPokemonState {
   data: IPokemon[];
   loading: boolean;
   error: string | null;
-  selectedPokemon: IPokemon | null;
-  selectedItems: number[];
+  selectedItems: ISelectedItem[];
+}
+
+export interface ISelectedItem {
+  id: number;
+  name: string;
+  weight: number;
+  height: number;
 }

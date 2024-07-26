@@ -3,10 +3,12 @@ import React from 'react';
 interface SelectedComponentProps {
   selectedCount: number;
   onUnselectAll: () => void;
+  onDownload: () => void;
 }
 const SelectedComponent: React.FC<SelectedComponentProps> = ({
   selectedCount,
   onUnselectAll,
+  onDownload,
 }) => {
   return (
     <div className="selected-container">
@@ -16,7 +18,7 @@ const SelectedComponent: React.FC<SelectedComponentProps> = ({
         selected
       </h4>
       <button onClick={onUnselectAll}>Unselect all</button>
-      <button>Download</button>
+      <button onClick={onDownload}>Download</button>
     </div>
   );
 };

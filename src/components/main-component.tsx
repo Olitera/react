@@ -5,6 +5,7 @@ import SelectedComponent from './selected-component.tsx';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store/store.ts';
 import { unselectAll } from '../slices/pokemon-slice.ts';
+import FileSaver from 'file-saver';
 
 interface MainComponentProps {
   searchValue?: string;
@@ -27,6 +28,17 @@ const MainComponent: React.FC<MainComponentProps> = ({ searchValue = '' }) => {
     dispatch(unselectAll());
   };
 
+  const handleDownload = () => {
+    const csvContent = `data:text/csv;charset=utf-8,${selectedItems
+      .map(
+        item =>
+          `${item.name},${item.weight},${item.height},https://pokeapi.co/api/v2/pokemon/${item.id}`
+      )
+      .join('\n')}`;
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    FileSaver.saveAs(blob, `${selectedItems.length}_pokemons.csv`);
+  };
+
   return (
     <div className="main-container">
       <div className="pokemons-container">
@@ -37,11 +49,12 @@ const MainComponent: React.FC<MainComponentProps> = ({ searchValue = '' }) => {
           <Outlet />
         </div>
       </div>
-      <div>
+      <div className="selected-section">
         {selectedItems.length > 0 && (
           <SelectedComponent
             selectedCount={selectedItems.length}
             onUnselectAll={handleUnselectAll}
+            onDownload={handleDownload}
           />
         )}
       </div>

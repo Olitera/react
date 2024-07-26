@@ -4,6 +4,7 @@ import { useGetPokemonsQuery } from '../services/pokemon-api.ts';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store/store.ts';
 import { selectItem, unselectItem } from '../slices/pokemon-slice.ts';
+import { ISelectedItem } from '../interfaces/pokemons.ts';
 
 interface ResultsComponentProps {
   searchValue?: string;
@@ -38,11 +39,11 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
     navigate(`/search/${newPage}`);
   };
 
-  const handleCheckboxChange = (id: number) => {
-    if (selectedItems.includes(id)) {
-      dispatch(unselectItem(id));
+  const handleCheckboxChange = (data: ISelectedItem) => {
+    if (selectedItems.some(item => item.id === data.id)) {
+      dispatch(unselectItem(data));
     } else {
-      dispatch(selectItem(id));
+      dispatch(selectItem(data));
     }
   };
 
@@ -79,8 +80,15 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
             <form>
               <input
                 type="checkbox"
-                checked={selectedItems.includes(pokemon.id)}
-                onChange={() => handleCheckboxChange(pokemon.id)}
+                checked={selectedItems.some(item => item.id === pokemon.id)}
+                onChange={() =>
+                  handleCheckboxChange({
+                    id: pokemon.id,
+                    name: pokemon.name,
+                    weight: pokemon.weight,
+                    height: pokemon.height,
+                  })
+                }
                 onClick={e => {
                   e.stopPropagation();
                 }}
