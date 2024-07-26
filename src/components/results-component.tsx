@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { useGetPokemonsQuery } from '../services/pokemonApi.ts';
+import { useGetPokemonsQuery } from '../services/pokemon-api.ts';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store/store.ts';
 import { selectItem, unselectItem } from '../slices/pokemon-slice.ts';

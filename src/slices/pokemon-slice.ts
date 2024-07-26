@@ -23,8 +23,11 @@ const pokemonSlice = createSlice({
         id => id !== action.payload
       );
     },
+    unselectAll(state) {
+      state.selectedItems = [];
+    },
   },
 });
 
-export const { selectItem, unselectItem } = pokemonSlice.actions;
+export const { selectItem, unselectItem, unselectAll } = pokemonSlice.actions;
 export default pokemonSlice.reducer;

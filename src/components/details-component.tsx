@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useGetPokemonByIdQuery } from '../services/pokemonApi.ts';
+import { useGetPokemonByIdQuery } from '../services/pokemon-api.ts';
 
 const DetailsComponent: React.FC = () => {
   const { id, search } = useParams<{ id: string; search: string }>();
