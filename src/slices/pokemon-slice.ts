@@ -18,7 +18,6 @@ const pokemonSlice = createSlice({
       }
     },
     unselectItem(state, action: PayloadAction<ISelectedItem>) {
-      console.log(state.selectedItems, action.payload);
       state.selectedItems = state.selectedItems.filter(
         item => item.id !== action.payload.id
       );
