@@ -1,4 +1,4 @@
-import { configureStore, Middleware } from '@reduxjs/toolkit';
+import { configureStore } from '@reduxjs/toolkit';
 import pokemonReducer from '../slices/pokemon-slice.ts';
 import { pokemonApi } from '../services/pokemon-api.ts';
 
@@ -10,7 +10,7 @@ export const store = configureStore({
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: false,
-    }).concat(pokemonApi.middleware as Middleware),
+    }).concat(pokemonApi.middleware),
 });
 
 export type AppStore = typeof store;

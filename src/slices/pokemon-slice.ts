@@ -1,14 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IPokemonState, ISelectedItem } from '../interfaces/pokemons.ts';
 
-const initialState: IPokemonState = {
+export const initialState: IPokemonState = {
   data: [],
   loading: false,
   error: null,
   selectedItems: [],
 };
 
-const pokemonSlice = createSlice({
+export const pokemonSlice = createSlice({
   name: 'pokemon',
   initialState,
   reducers: {

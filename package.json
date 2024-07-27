@@ -15,7 +15,6 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.6",
-    "@types/react-redux": "^7.1.33",
     "file-saver": "^2.0.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -25,11 +24,11 @@
   "devDependencies": {
     "@testing-library/jest-dom": "^6.4.8",
     "@testing-library/react": "^16.0.0",
-    "@testing-library/user-event": "^14.5.2",
     "@types/file-saver": "^2.0.7",
     "@types/jest": "^29.5.12",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
+    "@types/react-redux": "^7.1.33",
     "@typescript-eslint/eslint-plugin": "^7.13.1",
     "@typescript-eslint/parser": "^7.13.1",
     "@vitejs/plugin-react": "^4.3.1",
@@ -42,6 +41,7 @@
     "eslint-plugin-react-refresh": "^0.4.7",
     "husky": "^9.0.11",
     "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
     "jest-fetch-mock": "^3.0.3",
     "lint-staged": "^15.2.7",
     "prettier": "^3.3.2",
@@ -54,5 +54,24 @@
       "eslint --fix"
     ],
     "*.{ts,tsx}": "eslint --cache --fix"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "transformIgnorePatterns": [
+      "/node_modules/(?!some-package-to-transform|another-package-to-transform).+\\.js$"
+    ],
+    "testEnvironment": "jest-environment-jsdom",
+    "setupFilesAfterEnv": [
+      "@testing-library/jest-dom"
+    ],
+    "moduleFileExtensions": [
+      "js",
+      "jsx",
+      "ts",
+      "tsx",
+      "json"
+    ]
   }
 }
