@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTheme } from '../contexts/theme-context.tsx';
 
 interface SelectedComponentProps {
   selectedCount: number;
@@ -10,8 +11,10 @@ const SelectedComponent: React.FC<SelectedComponentProps> = ({
   onUnselectAll,
   onDownload,
 }) => {
+  const { theme } = useTheme();
+
   return (
-    <div className="selected-container">
+    <div className={`selected-container ${theme}`}>
       <h4>
         {' '}
         {selectedCount} {selectedCount === 1 ? 'pokemon is' : 'pokemons are'}{' '}

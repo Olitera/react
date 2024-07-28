@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store/store.ts';
 import { selectItem, unselectItem } from '../slices/pokemon-slice.ts';
 import { ISelectedItem } from '../interfaces/pokemons.ts';
+import { useTheme } from '../contexts/theme-context.tsx';
 
 interface ResultsComponentProps {
   searchValue?: string;
@@ -47,6 +48,8 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
     }
   };
 
+  const { theme } = useTheme();
+
   if (isFetching) {
     return <div>Loading...</div>;
   }
@@ -62,7 +65,7 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
     );
   }
   return (
-    <div className="bottom">
+    <div className={`bottom ${theme}`}>
       <div className="results-container">
         {data.results.map((pokemon, i) => (
           <div

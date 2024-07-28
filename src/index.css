@@ -11,6 +11,70 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  --light-background-top: #ccc98f;
+  --dark-background-top: #485153;
+  --light-text: #000000;
+  --dark-text: #ffffff;
+  --light-background-bottom: #d2dee1;
+  --dark-background-bottom: #6e6d4e;
+  --light-background-main: #ffffff;
+  --dark-background-main: #393f42;
+}
+
+.container.light {
+  color: var(--light-text);
+}
+
+.container.dark {
+  color: var(--dark-text);
+}
+
+.main-container.light {
+  background-color: var(--light-background-main);
+}
+
+.main-container.dark {
+  background-color: var(--dark-background-main);
+}
+
+.top.light {
+  background-color: var(--light-background-top);
+}
+
+.top.dark {
+  background-color: var(--dark-background-top);
+}
+
+.bottom.light {
+  background-color: var(--light-background-bottom);
+}
+
+.bottom.dark {
+  background-color: var(--dark-background-bottom);
+}
+
+.theme-selector.light {
+  background-color: var(--light-background-top);
+  color: var(--light-text);
+}
+
+.theme-selector.dark {
+  background-color: var(--dark-background-top);
+  color: var(--dark-text);
+}
+
+.selected-container.light {
+  background-color: var(--light-background-top);
+}
+
+.selected-container.dark {
+  background-color: var(--dark-background-top);
+}
+
+#theme-select {
+  border-radius: 5px;
+  height: 30px;
 }
 
 a {
@@ -65,6 +129,9 @@ button:focus-visible {
   padding: 15px;
   width: 100%;
   background-color: #ccc98f;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .bottom {

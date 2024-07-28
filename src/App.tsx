@@ -6,6 +6,8 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import NotFoundComponent from './components/not-found-component.tsx';
 import DetailsComponent from './components/details-component.tsx';
 import MainComponent from './components/main-component.tsx';
+import { useTheme } from './contexts/theme-context.tsx';
+import ThemeSelector from './components/theme-component.tsx';
 
 const App: React.FC = () => {
   const [inputValue, setInputValue] = useLocalStorageHook('');
@@ -13,11 +15,14 @@ const App: React.FC = () => {
     setInputValue(inputValue);
   };
 
+  const { theme } = useTheme();
+
   return (
-    <div className="container">
+    <div className={`container ${theme}`}>
       <BrowserRouter>
-        <section className="top">
+        <section className={`top ${theme}`}>
           <SearchComponent onSearch={handleSearch} inputValue={inputValue} />
+          <ThemeSelector />
         </section>
         <Routes>
           <Route path="/" element={<Navigate to="/search/1" />} />

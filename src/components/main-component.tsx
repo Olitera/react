@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store/store.ts';
 import { unselectAll } from '../slices/pokemon-slice.ts';
 import FileSaver from 'file-saver';
+import { useTheme } from '../contexts/theme-context.tsx';
 
 interface MainComponentProps {
   searchValue?: string;
@@ -39,8 +40,10 @@ const MainComponent: React.FC<MainComponentProps> = ({ searchValue = '' }) => {
     FileSaver.saveAs(blob, `${selectedItems.length}_pokemons.csv`);
   };
 
+  const { theme } = useTheme();
+
   return (
-    <div className="main-container">
+    <div className={`main-container ${theme}`}>
       <div className="pokemons-container">
         <div className="results-section" onClick={closeDetails}>
           <ResultsComponent searchValue={searchValue} />
