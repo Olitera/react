@@ -17,8 +17,12 @@
     "noEmit": true,
     "composite": true,
     "allowImportingTsExtensions": true,
-    "types": ["jest", "@testing-library/jest-dom"],
+    "types": ["jest", "@testing-library/jest-dom"]
   },
-  "include": ["src/**/*"],
+  "include": [
+    "src/**/*",
+    "node_modules/@types/node/globals.global.d.ts",
+    "node_modules/@types/node/globals.global.d.ts"
+  ],
   "exclude": ["node_modules", "build"]
 }

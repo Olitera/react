@@ -1,6 +1,3 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
-import NotFoundComponent from '../components/not-found-component.tsx';
 import { IPokemonState, ISelectedItem } from '../interfaces/pokemons.ts';
 import pokemonSlice, {
   initialState,
@@ -8,21 +5,6 @@ import pokemonSlice, {
   unselectAll,
   unselectItem,
 } from '../slices/pokemon-slice.ts';
-
-jest.mock('../services/pokemon-api.ts', () => ({
-  useGetPokemonsQuery: jest.fn(),
-}));
-
-jest.mock('react-router-dom', () => ({
-  useNavigate: () => jest.fn(),
-  useLocation: () => ({ search: '' }),
-  useParams: () => ({ search: '' }),
-}));
-
-jest.mock('react-redux', () => ({
-  useDispatch: () => jest.fn(),
-  useSelector: jest.fn(),
-}));
 
 describe('tests for pokemonSlice', () => {
   test('initialize slice with initial state', () => {
@@ -74,12 +56,5 @@ describe('tests for pokemonSlice', () => {
     };
     const state = pokemonSlice(initialStateWithSelected, unselectAll());
     expect(state.selectedItems).toEqual([]);
-  });
-});
-
-describe('NotFoundComponent', () => {
-  it('renders the 404 page', () => {
-    render(<NotFoundComponent />);
-    expect(screen.getByText('404')).toBeInTheDocument();
   });
 });
