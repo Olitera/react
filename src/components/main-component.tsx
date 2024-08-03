@@ -1,5 +1,4 @@
 import React from 'react';
-import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import ResultsComponent from './results-component.tsx';
 import SelectedComponent from './selected-component.tsx';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,17 +12,17 @@ interface MainComponentProps {
 }
 
 const MainComponent: React.FC<MainComponentProps> = ({ searchValue = '' }) => {
-  const navigate = useNavigate();
-  const { search } = useParams<{ search: string }>();
+  // const navigate = useNavigate();
+  // const { search } = useParams<{ search: string }>();
   const dispatch = useDispatch();
 
   const selectedItems = useSelector(
     (state: RootState) => state.pokemon.selectedItems
   );
 
-  const closeDetails = () => {
-    navigate(`/search/${search}`);
-  };
+  // const closeDetails = () => {
+  //   navigate(`/search/${search}`);
+  // };
 
   const handleUnselectAll = () => {
     dispatch(unselectAll());
@@ -45,12 +44,10 @@ const MainComponent: React.FC<MainComponentProps> = ({ searchValue = '' }) => {
   return (
     <div className={`main-container ${theme}`}>
       <div className="pokemons-container">
-        <div className="results-section" onClick={closeDetails}>
+        <div className="results-section">
           <ResultsComponent searchValue={searchValue} />
         </div>
-        <div className="detailed-section">
-          <Outlet />
-        </div>
+        <div className="detailed-section"></div>
       </div>
       <div className="selected-section">
         {selectedItems.length > 0 && (

@@ -27,7 +27,6 @@ const App: React.FC = () => {
       {/*  >*/}
       {/*    <Route path="details/:id" element={<DetailsComponent />} />*/}
       {/*  </Route>*/}
-      {/*  <Route path="*" element={<NotFoundComponent />} />*/}
       {/*</Routes>*/}
     </div>
   );

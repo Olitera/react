@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import React from 'react';
 import { useGetPokemonsQuery } from '../services/pokemon-api.ts';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store/store.ts';
@@ -14,10 +13,10 @@ interface ResultsComponentProps {
 const ResultsComponent: React.FC<ResultsComponentProps> = ({
   searchValue = '',
 }) => {
-  const navigate = useNavigate();
-  const [page, setPage] = React.useState<number>(1);
-  const location = useLocation();
-  const { search } = useParams<{ search: string }>();
+  // const navigate = useNavigate();
+  const [page] = React.useState<number>(1);
+  // const location = useLocation();
+  // const { search } = useParams<{ search: string }>();
   const { isFetching, data, error } = useGetPokemonsQuery({
     page,
     searchValue,
@@ -27,18 +26,18 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
     (state: RootState) => state.pokemon.selectedItems
   );
 
-  useEffect(() => {
-    const pageParam = parseInt(search || '1', 10);
-    setPage(pageParam);
-  }, [location.search, searchValue, search]);
+  // useEffect(() => {
+  //   const pageParam = parseInt(search || '1', 10);
+  //   setPage(pageParam);
+  // }, [location.search, searchValue, search]);
 
-  const handleClick = (id: number) => {
-    navigate(`details/${id}`);
-  };
+  // const handleClick = (id: number) => {
+  //   navigate(`details/${id}`);
+  // };
 
-  const handlePageChange = (newPage: number) => {
-    navigate(`/search/${newPage}`);
-  };
+  // const handlePageChange = (newPage: number) => {
+  //   navigate(`/search/${newPage}`);
+  // };
 
   const handleCheckboxChange = (data: ISelectedItem) => {
     if (selectedItems.some(item => item.id === data.id)) {
@@ -73,7 +72,7 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
             key={i}
             onClick={e => {
               e.stopPropagation();
-              handleClick(pokemon.id);
+              // handleClick(pokemon.id);
             }}
           >
             <h4>{pokemon.name}</h4>
@@ -104,7 +103,7 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
         <button
           onClick={e => {
             e.stopPropagation();
-            handlePageChange(page - 1);
+            // handlePageChange(page - 1);
           }}
           disabled={page === 1}
         >
@@ -114,7 +113,7 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
         <button
           onClick={e => {
             e.stopPropagation();
-            handlePageChange(page + 1);
+            // handlePageChange(page + 1);
           }}
           disabled={!data.next}
         >
