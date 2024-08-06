@@ -6,23 +6,27 @@ import { RootState } from '../store/store.ts';
 import { unselectAll } from '../slices/pokemon-slice.ts';
 import FileSaver from 'file-saver';
 import { useTheme } from '../contexts/theme-context.tsx';
+import { useRouter } from 'next/router';
 
 interface MainComponentProps {
   searchValue?: string;
+  page: number;
 }
 
-const MainComponent: React.FC<MainComponentProps> = ({ searchValue = '' }) => {
-  // const navigate = useNavigate();
-  // const { search } = useParams<{ search: string }>();
+const MainComponent: React.FC<MainComponentProps> = ({
+  searchValue = '',
+  page = 1,
+}) => {
+  const router = useRouter();
   const dispatch = useDispatch();
 
   const selectedItems = useSelector(
     (state: RootState) => state.pokemon.selectedItems
   );
 
-  // const closeDetails = () => {
-  //   navigate(`/search/${search}`);
-  // };
+  const closeDetails = () => {
+    router.push(`/search/${page}`);
+  };
 
   const handleUnselectAll = () => {
     dispatch(unselectAll());
@@ -44,8 +48,8 @@ const MainComponent: React.FC<MainComponentProps> = ({ searchValue = '' }) => {
   return (
     <div className={`main-container ${theme}`}>
       <div className="pokemons-container">
-        <div className="results-section">
-          <ResultsComponent searchValue={searchValue} />
+        <div className="results-section" onClick={closeDetails}>
+          <ResultsComponent searchValue={searchValue} page={page} />
         </div>
         <div className="detailed-section"></div>
       </div>

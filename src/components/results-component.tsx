@@ -5,18 +5,18 @@ import { RootState } from '../store/store.ts';
 import { selectItem, unselectItem } from '../slices/pokemon-slice.ts';
 import { ISelectedItem } from '../interfaces/pokemons.ts';
 import { useTheme } from '../contexts/theme-context.tsx';
+import { useRouter } from 'next/router';
 
 interface ResultsComponentProps {
   searchValue?: string;
+  page: number;
 }
 
 const ResultsComponent: React.FC<ResultsComponentProps> = ({
   searchValue = '',
+  page = 1,
 }) => {
-  // const navigate = useNavigate();
-  const [page] = React.useState<number>(1);
-  // const location = useLocation();
-  // const { search } = useParams<{ search: string }>();
+  const router = useRouter();
   const { isFetching, data, error } = useGetPokemonsQuery({
     page,
     searchValue,
@@ -26,18 +26,13 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
     (state: RootState) => state.pokemon.selectedItems
   );
 
-  // useEffect(() => {
-  //   const pageParam = parseInt(search || '1', 10);
-  //   setPage(pageParam);
-  // }, [location.search, searchValue, search]);
+  const handleClick = (id: number) => {
+    router.push(`${page}/details/${id}`);
+  };
 
-  // const handleClick = (id: number) => {
-  //   navigate(`details/${id}`);
-  // };
-
-  // const handlePageChange = (newPage: number) => {
-  //   navigate(`/search/${newPage}`);
-  // };
+  const handlePageChange = (newPage: number) => {
+    router.push(`/search/${newPage}`);
+  };
 
   const handleCheckboxChange = (data: ISelectedItem) => {
     if (selectedItems.some(item => item.id === data.id)) {
@@ -72,7 +67,7 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
             key={i}
             onClick={e => {
               e.stopPropagation();
-              // handleClick(pokemon.id);
+              handleClick(pokemon.id);
             }}
           >
             <h4>{pokemon.name}</h4>
@@ -103,7 +98,7 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
         <button
           onClick={e => {
             e.stopPropagation();
-            // handlePageChange(page - 1);
+            handlePageChange(+page - 1);
           }}
           disabled={page === 1}
         >
@@ -113,7 +108,7 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
         <button
           onClick={e => {
             e.stopPropagation();
-            // handlePageChange(page + 1);
+            handlePageChange(+page + 1);
           }}
           disabled={!data.next}
         >

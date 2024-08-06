@@ -1,13 +1,18 @@
 import React, { useEffect } from 'react';
 
 const useLocalStorageHook = (initialValue: string) => {
+  const isClient = typeof window !== 'undefined';
   const [value, setValue] = React.useState(() => {
-    const searchValue = localStorage.getItem('search');
+    const searchValue = isClient
+      ? localStorage.getItem('search')
+      : initialValue;
     return searchValue ? searchValue : initialValue;
   });
 
   useEffect(() => {
-    localStorage.setItem('search', value);
+    if (isClient) {
+      localStorage.setItem('search', value);
+    }
   }, [value]);
 
   return [value, setValue] as const;

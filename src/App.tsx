@@ -19,15 +19,6 @@ const App: React.FC = () => {
         <SearchComponent onSearch={handleSearch} inputValue={inputValue} />
         <ThemeSelector />
       </section>
-      {/*<Routes>*/}
-      {/*  <Route path="/" element={<Navigate to="/search/1" />} />*/}
-      {/*  <Route*/}
-      {/*    path="/search/:search"*/}
-      {/*    element={<MainComponent searchValue={inputValue} />}*/}
-      {/*  >*/}
-      {/*    <Route path="details/:id" element={<DetailsComponent />} />*/}
-      {/*  </Route>*/}
-      {/*</Routes>*/}
     </div>
   );
 };
