@@ -17,7 +17,7 @@
     "noEmit": true,
     "composite": true,
     "allowImportingTsExtensions": true,
-    "types": ["vitest/globals", "@testing-library/jest-dom"],
+    "types": ["vitest/globals", "@testing-library/jest-dom", "jest"],
     "plugins": [{ "name": "next" }],
     "incremental": true
   },

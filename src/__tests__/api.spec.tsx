@@ -1,9 +1,9 @@
 import React from 'react';
-import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
+import '@testing-library/jest-dom/';
 import SelectedComponent from '../components/selected-component';
 
-vi.mock('../contexts/theme-context', () => ({
+jest.mock('../contexts/theme-context', () => ({
   useTheme: () => ({ theme: 'light' }),
 }));
 
@@ -27,7 +27,7 @@ describe('SelectedComponent', () => {
   });
 
   it('calls onUnselectAll when "Unselect all" is clicked', () => {
-    const onUnselectAll = vi.fn();
+    const onUnselectAll = jest.fn();
     render(
       <SelectedComponent
         selectedCount={2}
@@ -41,7 +41,7 @@ describe('SelectedComponent', () => {
   });
 
   it('calls onDownload when "Download" is clicked', () => {
-    const onDownload = vi.fn();
+    const onDownload = jest.fn();
     render(
       <SelectedComponent
         selectedCount={2}

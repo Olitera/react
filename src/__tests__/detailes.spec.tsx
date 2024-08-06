@@ -1,28 +1,25 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
-import { vi } from 'vitest';
 import { configureStore } from '@reduxjs/toolkit';
-import DetailsComponent from '../components/details-component.tsx';
-import { useGetPokemonByIdQuery } from '../services/pokemon-api.ts';
-import { pokemonApi } from '../services/pokemon-api.ts';
-import pokemonReducer from '../slices/pokemon-slice.ts';
-import { IPokemon } from '../interfaces/pokemons.ts';
+import DetailsComponent from '../components/details-component';
+import { pokemonApi, useGetPokemonByIdQuery } from '../services/pokemon-api';
+import pokemonReducer from '../slices/pokemon-slice';
+import { useRouter } from 'next/router';
 
-interface PokemonQueryResult {
-  data: IPokemon | null;
-  isLoading: boolean;
-  error: Error | null;
-}
-
-vi.mock('../services/pokemon-api', () => ({
-  useGetPokemonByIdQuery: vi.fn(),
+jest.mock('../services/pokemon-api', () => ({
+  __esModule: true,
+  useGetPokemonByIdQuery: jest.fn(),
   pokemonApi: {
     reducerPath: 'pokemonApi',
-    reducer: vi.fn(() => ({})),
+    reducer: jest.fn(() => ({})),
     middleware: [],
   },
+}));
+
+jest.mock('next/router', () => ({
+  __esModule: true,
+  useRouter: jest.fn(),
 }));
 
 const mockStore = configureStore({
@@ -45,19 +42,12 @@ const mockStore = configureStore({
 });
 
 const Wrapper = ({ children }: { children: React.ReactNode }) => (
-  <Provider store={mockStore}>
-    <MemoryRouter initialEntries={['/details/1/search/1']}>
-      <Routes>
-        <Route path="details/:id/search/:search" element={children} />
-        <Route path="search/:search" element={<div>Search Page</div>} />
-      </Routes>
-    </MemoryRouter>
-  </Provider>
+  <Provider store={mockStore}>{children}</Provider>
 );
 
 describe('DetailsComponent', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
   });
 
   it('renders Pokémon details correctly', async () => {
@@ -66,16 +56,20 @@ describe('DetailsComponent', () => {
       name: 'Pikachu',
       weight: 60,
       height: 4,
-      order: 1,
       sprites: {
         front_default: 'https://pokeapi.co/api/v2/sprites/pokemon/1.png',
       },
     };
 
-    (useGetPokemonByIdQuery as jest.Mock<PokemonQueryResult>).mockReturnValue({
+    (useGetPokemonByIdQuery as jest.Mock).mockReturnValue({
       data: mockResponse,
       isLoading: false,
       error: null,
+    });
+
+    (useRouter as jest.Mock).mockReturnValue({
+      query: { id: '1', page: '1' },
+      push: jest.fn(),
     });
 
     render(<DetailsComponent />, { wrapper: Wrapper });
@@ -92,10 +86,15 @@ describe('DetailsComponent', () => {
   });
 
   it('displays a loading message when data is being fetched', () => {
-    (useGetPokemonByIdQuery as jest.Mock<PokemonQueryResult>).mockReturnValue({
+    (useGetPokemonByIdQuery as jest.Mock).mockReturnValue({
       data: null,
       isLoading: true,
       error: null,
+    });
+
+    (useRouter as jest.Mock).mockReturnValue({
+      query: { id: '1', page: '1' },
+      push: jest.fn(),
     });
 
     render(<DetailsComponent />, { wrapper: Wrapper });
@@ -104,10 +103,15 @@ describe('DetailsComponent', () => {
   });
 
   it('displays an error message if the query fails', () => {
-    (useGetPokemonByIdQuery as jest.Mock<PokemonQueryResult>).mockReturnValue({
+    (useGetPokemonByIdQuery as jest.Mock).mockReturnValue({
       data: null,
       isLoading: false,
       error: new Error('Failed to fetch'),
+    });
+
+    (useRouter as jest.Mock).mockReturnValue({
+      query: { id: '1', page: '1' },
+      push: jest.fn(),
     });
 
     render(<DetailsComponent />, { wrapper: Wrapper });
@@ -116,10 +120,15 @@ describe('DetailsComponent', () => {
   });
 
   it('shows a failure message if Pokémon details are not found', () => {
-    (useGetPokemonByIdQuery as jest.Mock<PokemonQueryResult>).mockReturnValue({
+    (useGetPokemonByIdQuery as jest.Mock).mockReturnValue({
       data: null,
       isLoading: false,
       error: null,
+    });
+
+    (useRouter as jest.Mock).mockReturnValue({
+      query: { id: '1', page: '1' },
+      push: jest.fn(),
     });
 
     render(<DetailsComponent />, { wrapper: Wrapper });
@@ -127,5 +136,35 @@ describe('DetailsComponent', () => {
     expect(
       screen.getByText('Failed to load Pokemon details.')
     ).toBeInTheDocument();
+  });
+
+  it('navigates to the search page when "Close" button is clicked', () => {
+    const pushMock = jest.fn();
+
+    const mockResponse = {
+      id: 1,
+      name: 'Pikachu',
+      weight: 60,
+      height: 4,
+      sprites: {
+        front_default: 'https://pokeapi.co/api/v2/sprites/pokemon/1.png',
+      },
+    };
+
+    (useGetPokemonByIdQuery as jest.Mock).mockReturnValue({
+      data: mockResponse,
+      isLoading: false,
+      error: null,
+    });
+
+    (useRouter as jest.Mock).mockReturnValue({
+      query: { id: '1', page: '1' },
+      push: pushMock,
+    });
+
+    render(<DetailsComponent />, { wrapper: Wrapper });
+
+    screen.getByText('Close').click();
+    expect(pushMock).toHaveBeenCalledWith('/search/1');
   });
 });
