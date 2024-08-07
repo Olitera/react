@@ -1,16 +1,20 @@
 import React from 'react';
 import type { AppProps } from 'next/app';
 import { Provider } from 'react-redux';
-import { store } from '../store/store';
+import { wrapper } from '../store/store';
 import { ThemeProvider } from '../contexts/theme-context';
 import '../index.css';
 
-export default function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({ Component, ...rest }: AppProps) {
+  const newStore = wrapper.useWrappedStore(rest);
+
   return (
-    <Provider store={store}>
+    <Provider store={newStore.store}>
       <ThemeProvider>
-        <Component {...pageProps} />
+        <Component {...newStore.props.pageProps} />
       </ThemeProvider>
     </Provider>
   );
 }
+
+export default MyApp;

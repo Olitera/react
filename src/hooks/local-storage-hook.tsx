@@ -13,7 +13,7 @@ const useLocalStorageHook = (initialValue: string) => {
     if (isClient) {
       localStorage.setItem('search', value);
     }
-  }, [value]);
+  }, [value, isClient]);
 
   return [value, setValue] as const;
 };

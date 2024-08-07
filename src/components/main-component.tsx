@@ -7,6 +7,7 @@ import { unselectAll } from '../slices/pokemon-slice.ts';
 import FileSaver from 'file-saver';
 import { useTheme } from '../contexts/theme-context.tsx';
 import { useRouter } from 'next/router';
+import { IPokemon } from '../interfaces/pokemons.ts';
 
 interface MainComponentProps {
   searchValue?: string;
@@ -20,7 +21,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const selectedItems = useSelector(
+  const selectedItems: IPokemon[] = useSelector(
     (state: RootState) => state.pokemon.selectedItems
   );
 

@@ -9,7 +9,7 @@ import useLocalStorageHook from '../../../../hooks/local-storage-hook.tsx';
 
 const DetailsPage: React.FC = () => {
   const router = useRouter();
-  const { id, page, search } = router.query;
+  const { id, page } = router.query;
 
   const { theme } = useTheme();
 
@@ -30,7 +30,7 @@ const DetailsPage: React.FC = () => {
         <ThemeSelector />
       </section>
       <div className="pokemons-container">
-        <MainComponent searchValue={search as string} page={p} />
+        <MainComponent searchValue={inputValue as string} page={p} />
         <div className="detailed-section">
           <DetailsComponent />
         </div>

@@ -5,10 +5,12 @@ import ThemeSelector from '../../../components/theme-component.tsx';
 import MainComponent from '../../../components/main-component.tsx';
 import SearchComponent from '../../../components/search-component.tsx';
 import useLocalStorageHook from '../../../hooks/local-storage-hook.tsx';
+import { wrapper } from '../../../store/store.ts';
+import { NextPage } from 'next';
 
-const SearchPage: React.FC = () => {
+const SearchPage: NextPage = () => {
   const router = useRouter();
-  const { search, page } = router.query;
+  const { page } = router.query;
 
   const [inputValue, setInputValue] = useLocalStorageHook('');
   const handleSearch = (inputValue: string) => {
@@ -16,11 +18,6 @@ const SearchPage: React.FC = () => {
   };
 
   const { theme } = useTheme();
-
-  console.log(router.query);
-  // const handlePageChange = (newPage: number) => {
-  //   router.push(`/search/${newPage}`);
-  // };
 
   const p = page ? +page : 1;
 
@@ -30,9 +27,14 @@ const SearchPage: React.FC = () => {
         <SearchComponent onSearch={handleSearch} inputValue={inputValue} />
         <ThemeSelector />
       </section>
-      <MainComponent searchValue={search as string} page={p} />
+      <MainComponent searchValue={inputValue as string} page={p} />
     </div>
   );
 };
+
+export const getServerSideProps = wrapper.getServerSideProps(() => async () => {
+  console.log('2. Page.getServerSideProps uses the store to dispatch things');
+  return { props: {} };
+});
 
 export default SearchPage;
