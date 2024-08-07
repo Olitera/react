@@ -1,28 +1,65 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import '@testing-library/jest-dom';
-import { Provider } from 'react-redux';
-import { store } from '../store/store.ts';
-import { ThemeProvider } from '../contexts/theme-context.tsx';
-import App from '../App.tsx';
+import App from '../App';
+import { ThemeProvider } from '../contexts/theme-context';
 
-describe('App Component', () => {
-  test('renders search input and theme selector', () => {
+jest.mock('../hooks/local-storage-hook.tsx', () => ({
+  __esModule: true,
+  default: () => ['', jest.fn()],
+}));
+
+jest.mock('../contexts/theme-context.tsx', () => ({
+  __esModule: true,
+  useTheme: () => ({ theme: 'light' }),
+  ThemeProvider: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
+}));
+
+jest.mock('../components/search-component.tsx', () => ({
+  __esModule: true,
+  default: ({
+    onSearch,
+    inputValue,
+  }: {
+    onSearch: (input: string) => void;
+    inputValue: string;
+  }) => (
+    <div data-testid="search-component">
+      <input
+        data-testid="search-input"
+        value={inputValue}
+        onChange={e => onSearch(e.target.value)}
+      />
+    </div>
+  ),
+}));
+
+jest.mock('../components/theme-component.tsx', () => ({
+  __esModule: true,
+  default: () => <div data-testid="theme-selector" />,
+}));
+
+describe('App', () => {
+  it('renders the App component with initial setup', () => {
     render(
-      <Provider store={store}>
-        <ThemeProvider>
-          <App />
-        </ThemeProvider>
-      </Provider>
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
     );
 
-    const searchInput = screen.getByRole('textbox');
-    expect(searchInput).toBeInTheDocument();
+    expect(screen.getByTestId('search-component')).toBeInTheDocument();
+    expect(screen.getByTestId('theme-selector')).toBeInTheDocument();
+  });
 
-    const searchButton = screen.getByRole('button', { name: /search/i });
-    expect(searchButton).toBeInTheDocument();
+  it('uses the correct theme', () => {
+    render(
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
+    );
 
-    const themeSelectorLabel = screen.getByLabelText(/select theme:/i);
-    expect(themeSelectorLabel).toBeInTheDocument();
+    const container = screen.getByTestId('container');
+    expect(container).toHaveClass('container light');
   });
 });

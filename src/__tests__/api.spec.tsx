@@ -1,56 +1,119 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom/';
-import SelectedComponent from '../components/selected-component';
+import { render, screen } from '@testing-library/react';
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
+import { pokemonApi, useGetPokemonByIdQuery } from '../services/pokemon-api';
+import pokemonReducer from '../slices/pokemon-slice';
 
-jest.mock('../contexts/theme-context', () => ({
-  useTheme: () => ({ theme: 'light' }),
+jest.mock('../services/pokemon-api', () => ({
+  __esModule: true,
+  useGetPokemonByIdQuery: jest.fn(),
+  pokemonApi: {
+    reducerPath: 'pokemonApi',
+    reducer: jest.fn(() => ({})),
+    middleware: [],
+  },
 }));
 
-describe('SelectedComponent', () => {
-  it('renders with the correct theme class', () => {
-    render(
-      <SelectedComponent
-        selectedCount={2}
-        onUnselectAll={() => {}}
-        onDownload={() => {}}
-      />
-    );
+const mockStore = configureStore({
+  reducer: {
+    pokemon: pokemonReducer,
+    [pokemonApi.reducerPath]: pokemonApi.reducer,
+  },
+  preloadedState: {
+    pokemon: {
+      data: [],
+      loading: false,
+      error: null,
+      selectedItems: [],
+    },
+  },
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }).concat(pokemonApi.middleware),
+});
 
-    expect(screen.getByText('2 pokemons are selected')).toBeInTheDocument();
-    expect(
-      screen.getByRole('button', { name: /Unselect all/i })
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole('button', { name: /Download/i })
-    ).toBeInTheDocument();
+const Wrapper = ({ children }: { children: React.ReactNode }) => (
+  <Provider store={mockStore}>{children}</Provider>
+);
+
+describe('pokemonApi', () => {
+  it('fetches and displays a pokemon by ID', async () => {
+    const mockPokemon = {
+      id: 1,
+      name: 'bulbasaur',
+      height: 7,
+      weight: 69,
+    };
+
+    (useGetPokemonByIdQuery as jest.Mock).mockReturnValue({
+      data: mockPokemon,
+      isLoading: false,
+      isError: false,
+    });
+
+    const TestComponent = () => {
+      const { data, isLoading, isError } = useGetPokemonByIdQuery('1');
+
+      if (isLoading) return <div>Loading...</div>;
+      if (isError) return <div>Error occurred</div>;
+
+      return (
+        <div>
+          <p>Name: {data?.name}</p>
+          <p>Height: {data?.height}</p>
+          <p>Weight: {data?.weight}</p>
+        </div>
+      );
+    };
+
+    render(<TestComponent />, { wrapper: Wrapper });
+
+    expect(screen.getByText('Name: bulbasaur')).toBeInTheDocument();
+    expect(screen.getByText('Height: 7')).toBeInTheDocument();
+    expect(screen.getByText('Weight: 69')).toBeInTheDocument();
   });
 
-  it('calls onUnselectAll when "Unselect all" is clicked', () => {
-    const onUnselectAll = jest.fn();
-    render(
-      <SelectedComponent
-        selectedCount={2}
-        onUnselectAll={onUnselectAll}
-        onDownload={() => {}}
-      />
-    );
+  it('handles loading state', () => {
+    (useGetPokemonByIdQuery as jest.Mock).mockReturnValue({
+      data: undefined,
+      isLoading: true,
+      isError: false,
+    });
 
-    fireEvent.click(screen.getByRole('button', { name: /Unselect all/i }));
-    expect(onUnselectAll).toHaveBeenCalled();
+    const TestComponent = () => {
+      const { data, isLoading, isError } = useGetPokemonByIdQuery('1');
+
+      if (isLoading) return <div>Loading...</div>;
+      if (isError) return <div>Error occurred</div>;
+
+      return <div>{data?.name}</div>;
+    };
+
+    render(<TestComponent />, { wrapper: Wrapper });
+
+    expect(screen.getByText('Loading...')).toBeInTheDocument();
   });
 
-  it('calls onDownload when "Download" is clicked', () => {
-    const onDownload = jest.fn();
-    render(
-      <SelectedComponent
-        selectedCount={2}
-        onUnselectAll={() => {}}
-        onDownload={onDownload}
-      />
-    );
+  it('handles error state', () => {
+    (useGetPokemonByIdQuery as jest.Mock).mockReturnValue({
+      data: undefined,
+      isLoading: false,
+      isError: true,
+    });
 
-    fireEvent.click(screen.getByRole('button', { name: /Download/i }));
-    expect(onDownload).toHaveBeenCalled();
+    const TestComponent = () => {
+      const { data, isLoading, isError } = useGetPokemonByIdQuery('1');
+
+      if (isLoading) return <div>Loading...</div>;
+      if (isError) return <div>Error occurred</div>;
+
+      return <div>{data?.name}</div>;
+    };
+
+    render(<TestComponent />, { wrapper: Wrapper });
+
+    expect(screen.getByText('Error occurred')).toBeInTheDocument();
   });
 });

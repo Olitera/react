@@ -14,7 +14,7 @@ const App: React.FC = () => {
   const { theme } = useTheme();
 
   return (
-    <div className={`container ${theme}`}>
+    <div className={`container ${theme}`} data-testid="container">
       <section className={`top ${theme}`}>
         <SearchComponent onSearch={handleSearch} inputValue={inputValue} />
         <ThemeSelector />
