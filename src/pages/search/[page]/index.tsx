@@ -34,7 +34,9 @@ const SearchPage: NextPage = () => {
 
 export const getServerSideProps = wrapper.getServerSideProps(() => async () => {
   console.log('2. Page.getServerSideProps uses the store to dispatch things');
-  return { props: {} };
+  return {
+    props: {},
+  };
 });
 
 export default SearchPage;
