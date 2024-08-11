@@ -2,14 +2,13 @@
 
 import React from 'react';
 import { useSearchParams } from 'next/navigation';
-import SearchComponent from '../../components/search-component.tsx';
-import ThemeSelector from '../../components/theme-component.tsx';
-import MainComponent from '../../components/main-component.tsx';
-import { useTheme } from '../../contexts/theme-context.tsx';
-import useLocalStorageHook from '../../hooks/local-storage-hook.tsx';
+import SearchComponent from '../../../components/search-component.tsx';
+import ThemeSelector from '../../../components/theme-component.tsx';
+import MainComponent from '../../../components/main-component.tsx';
+import { useTheme } from '../../../contexts/theme-context.tsx';
+import useLocalStorageHook from '../../../hooks/local-storage-hook.tsx';
 
 const SearchPage: React.FC = () => {
-  // const { page } = router.query;
   const searchParams = useSearchParams();
   const page = searchParams.get('page') || '1';
 

@@ -1,10 +1,10 @@
 import React from 'react';
-import { useRouter } from 'next/router';
+import { useParams, useRouter } from 'next/navigation';
 import { useGetPokemonByIdQuery } from '../services/pokemon-api.ts';
 
 const DetailsComponent: React.FC = () => {
   const router = useRouter();
-  const { id, page } = router.query;
+  const { id, page } = useParams();
   const { data, isLoading, error } = useGetPokemonByIdQuery(id as string);
 
   const handleClose = () => {
