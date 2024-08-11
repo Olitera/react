@@ -5,7 +5,7 @@ import { RootState } from '../store/store.ts';
 import { selectItem, unselectItem } from '../slices/pokemon-slice.ts';
 import { IPokemon, ISelectedItem } from '../interfaces/pokemons.ts';
 import { useTheme } from '../contexts/theme-context.tsx';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 interface ResultsComponentProps {
   searchValue?: string;

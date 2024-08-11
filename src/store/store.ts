@@ -3,7 +3,7 @@ import pokemonReducer from '../slices/pokemon-slice.ts';
 import { pokemonApi } from '../services/pokemon-api.ts';
 import { createWrapper } from 'next-redux-wrapper';
 
-const store = configureStore({
+export const store = configureStore({
   reducer: {
     pokemon: pokemonReducer,
     [pokemonApi.reducerPath]: pokemonApi.reducer,

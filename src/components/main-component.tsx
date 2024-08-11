@@ -6,7 +6,7 @@ import { RootState } from '../store/store.ts';
 import { unselectAll } from '../slices/pokemon-slice.ts';
 import FileSaver from 'file-saver';
 import { useTheme } from '../contexts/theme-context.tsx';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { IPokemon } from '../interfaces/pokemons.ts';
 
 interface MainComponentProps {
