@@ -1,44 +1,33 @@
-'use client';
-
 import React from 'react';
-import { useParams, useSearchParams } from 'next/navigation';
-import ThemeSelector from '../../../../../components/theme-component.tsx';
-import SearchComponent from '../../../../../components/search-component.tsx';
-import MainComponent from '../../../../../components/main-component.tsx';
+import ThProvider from '../../new.tsx';
 import DetailsComponent from '../../../../../components/details-component.tsx';
-import useLocalStorageHook from '../../../../../hooks/local-storage-hook.tsx';
-import { useTheme } from '../../../../../contexts/theme-context.tsx';
+import MainComponent from '../../../../../components/main-component.tsx';
 
-const DetailsPage: React.FC = () => {
-  const { id } = useParams();
-  const searchParams = useSearchParams();
-  const page = searchParams.get('page') || '1';
+interface DetailsPageProps {
+  params: { id: string };
+  searchParams: { page?: string };
+}
 
-  const { theme } = useTheme();
-
-  const [inputValue, setInputValue] = useLocalStorageHook('');
-  const handleSearch = (inputValue: string) => {
-    setInputValue(inputValue);
-  };
-
-  if (!id || !page) {
-    return <div>Loading...</div>;
-  }
+async function DetailsPage({ searchParams }: DetailsPageProps) {
+  // const id = params.id;
+  const page = searchParams.page || '1';
 
   return (
-    <div className={`container ${theme}`}>
-      <section className={`top ${theme}`}>
-        <SearchComponent onSearch={handleSearch} inputValue={inputValue} />
-        <ThemeSelector />
-      </section>
+    <ThProvider>
       <div className="pokemons-container">
-        <MainComponent searchValue={inputValue as string} page={+page} />
+        <MainComponent
+          // searchValue={ inputValue as string }
+          page={+page}
+        />
         <div className="detailed-section">
-          <DetailsComponent />
+          <DetailsComponent
+          // id={id}
+          // page={page}
+          />
         </div>
       </div>
-    </div>
+    </ThProvider>
   );
-};
+}
 
 export default DetailsPage;

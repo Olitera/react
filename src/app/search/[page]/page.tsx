@@ -1,33 +1,21 @@
-'use client';
-
 import React from 'react';
-import { useSearchParams } from 'next/navigation';
-import SearchComponent from '../../../components/search-component.tsx';
-import ThemeSelector from '../../../components/theme-component.tsx';
+
 import MainComponent from '../../../components/main-component.tsx';
-import { useTheme } from '../../../contexts/theme-context.tsx';
-import useLocalStorageHook from '../../../hooks/local-storage-hook.tsx';
+import ThProvider from './new.tsx';
 
-const SearchPage: React.FC = () => {
-  const searchParams = useSearchParams();
-  const page = searchParams.get('page') || '1';
+interface SearchPageProps {
+  searchParams: { page?: string; query?: string };
+}
 
-  const [inputValue, setInputValue] = useLocalStorageHook('');
-  const handleSearch = (inputValue: string) => {
-    setInputValue(inputValue);
-  };
-
-  const { theme } = useTheme();
+async function SearchPage({ searchParams }: SearchPageProps) {
+  const page = searchParams.page ? parseInt(searchParams.page) : 1;
+  const query = searchParams.query || '';
 
   return (
-    <div className={`container ${theme}`}>
-      <section className={`top ${theme}`}>
-        <SearchComponent onSearch={handleSearch} inputValue={inputValue} />
-        <ThemeSelector />
-      </section>
-      <MainComponent searchValue={inputValue as string} page={+page} />
-    </div>
+    <ThProvider>
+      <MainComponent searchValue={query} page={+page} />
+    </ThProvider>
   );
-};
+}
 
 export default SearchPage;

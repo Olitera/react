@@ -6,6 +6,8 @@ export const initialState: IPokemonState = {
   loading: false,
   error: null,
   selectedItems: [],
+  page: '1',
+  searchValue: '',
 };
 
 export const pokemonSlice = createSlice({
@@ -25,8 +27,20 @@ export const pokemonSlice = createSlice({
     unselectAll(state) {
       state.selectedItems = [];
     },
+    setPage(state, action: PayloadAction<string>) {
+      state.page = action.payload;
+    },
+    setSearchValue(state, action: PayloadAction<string>) {
+      state.searchValue = action.payload;
+    },
   },
 });
 
-export const { selectItem, unselectItem, unselectAll } = pokemonSlice.actions;
+export const {
+  selectItem,
+  unselectItem,
+  unselectAll,
+  setPage,
+  setSearchValue,
+} = pokemonSlice.actions;
 export default pokemonSlice.reducer;

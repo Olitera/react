@@ -29,6 +29,8 @@ export interface IPokemonState {
   loading: boolean;
   error: string | null;
   selectedItems: ISelectedItem[];
+  page: string;
+  searchValue: string;
 }
 
 export interface ISelectedItem {

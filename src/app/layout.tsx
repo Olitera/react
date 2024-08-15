@@ -2,9 +2,10 @@
 
 import React from 'react';
 import '../index.css';
-import { ThemeProvider } from '../contexts/theme-context.tsx';
+
 import { Provider } from 'react-redux';
 import { store } from '../store/store.ts';
+import { ThemeProvider } from '../contexts/theme-context.tsx';
 
 export default function RootLayout({
   children,

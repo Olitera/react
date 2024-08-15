@@ -4,24 +4,12 @@ import {
   IPokemons,
   IPokemonsResponse,
 } from '../interfaces/pokemons.ts';
-import { HYDRATE } from 'next-redux-wrapper';
-import { Action, PayloadAction } from '@reduxjs/toolkit';
-import { RootState } from '../store/store.ts';
-
-function isHydrateAction(action: Action): action is PayloadAction<RootState> {
-  return action.type === HYDRATE;
-}
 
 export const pokemonApi = createApi({
   reducerPath: 'pokemonApi',
   baseQuery: fetchBaseQuery({
     baseUrl: 'https://pokeapi.co/api/v2/',
   }),
-  extractRehydrationInfo(action: Action, { reducerPath }) {
-    if (isHydrateAction(action)) {
-      return action.payload[reducerPath];
-    }
-  },
   endpoints: builder => ({
     getPokemons: builder.query<
       IPokemonsResponse,
