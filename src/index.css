@@ -54,6 +54,17 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+.upcontroller-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  background-color: #eeeaea;
+  border: solid 1px #242424;
+  border-radius: 10px;
+  padding: 15px;
+}
+
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
