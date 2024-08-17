@@ -1,11 +1,11 @@
 export interface FormData {
-  name: string;
-  age: number;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  gender: string;
-  tnc: boolean;
-  picture: string;
-  country: string;
+  name: string | undefined;
+  age: number | undefined;
+  email: string | undefined;
+  password: string | undefined;
+  confirmPassword: string | undefined;
+  gender: string | undefined;
+  tnc: boolean | undefined;
+  picture: File | undefined;
+  country: string | undefined;
 }
