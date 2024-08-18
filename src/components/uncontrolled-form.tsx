@@ -4,9 +4,11 @@ import { setUncontrolledFormData } from '../redux/slices/form-slise.ts';
 import { FormData } from '../interfaces/form-data.ts';
 import countries from '../data/countries.ts';
 import * as Yup from 'yup';
+import { useNavigate } from 'react-router-dom';
 
 const UncontrolledForm: React.FC = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const nameRef = useRef<HTMLInputElement>(
@@ -111,6 +113,7 @@ const UncontrolledForm: React.FC = () => {
       await validationSchema.validate(formData, { abortEarly: false });
       setErrors({});
       dispatch(setUncontrolledFormData(formData));
+      navigate('/');
     } catch (validationError) {
       console.error('Form validation failed');
       const errorMessages: { [key: string]: string } = {};

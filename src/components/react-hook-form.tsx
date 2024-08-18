@@ -6,6 +6,7 @@ import { FormData } from '../interfaces/form-data.ts';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import countries from '../data/countries.ts';
+import { useNavigate } from 'react-router-dom';
 
 const validationSchema = Yup.object().shape({
   name: Yup.string()
@@ -39,6 +40,7 @@ const validationSchema = Yup.object().shape({
 
 const HookForm: React.FC = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const {
     register,
@@ -49,7 +51,7 @@ const HookForm: React.FC = () => {
     resolver: yupResolver(validationSchema),
   });
 
-  const onSubmita = (data: FormData) => {
+  const onFormSubmit = (data: FormData) => {
     if (data.picture instanceof File) {
       const reader = new FileReader();
       reader.readAsDataURL(data.picture);
@@ -57,18 +59,20 @@ const HookForm: React.FC = () => {
         const base64Picture = reader.result as string;
         const formData = { ...data, picture: base64Picture };
         dispatch(setHookFormData(formData));
+        navigate('/');
       };
       reader.onerror = () => {
         console.error('File reading failed');
       };
     } else {
       dispatch(setHookFormData(data));
+      navigate('/');
     }
   };
 
   return (
     <form
-      onSubmit={(e) => void handleSubmit(onSubmita)(e)}
+      onSubmit={(e) => void handleSubmit(onFormSubmit)(e)}
       className="hook-form"
     >
       <label htmlFor="name">Name</label>
