@@ -9,15 +9,33 @@ const UncontrolledForm: React.FC = () => {
   const dispatch = useDispatch();
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-  const nameRef = useRef<HTMLInputElement>(null);
-  const ageRef = useRef<HTMLInputElement>(null);
-  const emailRef = useRef<HTMLInputElement>(null);
-  const passwordRef = useRef<HTMLInputElement>(null);
-  const confirmPasswordRef = useRef<HTMLInputElement>(null);
-  const genderRef = useRef<HTMLSelectElement>(null);
-  const tncRef = useRef<HTMLInputElement>(null);
-  const pictureRef = useRef<HTMLInputElement>(null);
-  const countryRef = useRef<HTMLInputElement>(null);
+  const nameRef = useRef<HTMLInputElement>(
+    null,
+  ) as React.MutableRefObject<HTMLInputElement>;
+  const ageRef = useRef<HTMLInputElement>(
+    null,
+  ) as React.MutableRefObject<HTMLInputElement>;
+  const emailRef = useRef<HTMLInputElement>(
+    null,
+  ) as React.MutableRefObject<HTMLInputElement>;
+  const passwordRef = useRef<HTMLInputElement>(
+    null,
+  ) as React.MutableRefObject<HTMLInputElement>;
+  const confirmPasswordRef = useRef<HTMLInputElement>(
+    null,
+  ) as React.MutableRefObject<HTMLInputElement>;
+  const genderRef = useRef<HTMLSelectElement>(
+    null,
+  ) as React.MutableRefObject<HTMLSelectElement>;
+  const tncRef = useRef<HTMLInputElement>(
+    null,
+  ) as React.MutableRefObject<HTMLInputElement>;
+  const pictureRef = useRef<HTMLInputElement>(
+    null,
+  ) as React.MutableRefObject<HTMLInputElement>;
+  const countryRef = useRef<HTMLInputElement>(
+    null,
+  ) as React.MutableRefObject<HTMLInputElement>;
 
   const validationSchema = Yup.object().shape({
     name: Yup.string()
@@ -44,34 +62,48 @@ const UncontrolledForm: React.FC = () => {
     tnc: Yup.bool()
       .oneOf([true], 'You must accept the Terms and Conditions')
       .required('You must accept the Terms and Conditions'),
-    picture: Yup.mixed()
-      .test('fileType', 'Unsupported file format', (value) => {
-        if (!value) return false;
-        return (
-          (value as File).type === 'image/jpeg' ||
-          (value as File).type === 'image/png'
-        );
-      })
-      .test('fileSize', 'File too large', (value) => {
-        if (!value) return false;
-        return (value as File).size <= 2 * 1024 * 1024;
-      })
-      .required('Picture is required'),
+    // picture: Yup.mixed()
+    // .required('Picture is required')
     country: Yup.string()
       .oneOf(countries, 'Please select a valid country')
       .required('Country is required'),
   });
 
+  const handleFileToBase64 = async (file: File): Promise<string> => {
+    try {
+      const reader = new FileReader();
+      return await new Promise<string>((resolve, reject) => {
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = () =>
+          reject(new Error('Error during decoding the file'));
+      });
+    } catch (error) {
+      console.error('Error converting file to Base64:', error);
+      throw error;
+    }
+  };
+
   const handleSubmit = async () => {
+    let base64Picture = '';
+    if (pictureRef.current?.files?.[0]) {
+      const file = pictureRef.current.files[0];
+      console.log('File type:', file.type);
+      console.log('File size:', file.size);
+      base64Picture = await handleFileToBase64(pictureRef.current.files[0]);
+    }
+
     const formData: FormData = {
       name: nameRef.current?.value,
       age: ageRef.current?.valueAsNumber,
       email: emailRef.current?.value,
       password: passwordRef.current?.value,
       confirmPassword: confirmPasswordRef.current?.value,
-      gender: genderRef.current?.value,
+      gender: genderRef.current?.value as NonNullable<
+        'male' | 'female' | 'other'
+      >,
       tnc: tncRef.current?.checked,
-      picture: pictureRef.current?.files?.[0],
+      picture: base64Picture,
       country: countryRef.current?.value,
     };
 

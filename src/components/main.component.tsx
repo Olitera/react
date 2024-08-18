@@ -8,7 +8,10 @@ const MainComponent: React.FC = () => {
       <nav>
         <ul>
           <li>
-            <Link to="/upcontroller-form">Upcontroller Form</Link>
+            <Link to="/upcontroller-form">Uncontrolled Form</Link>
+          </li>
+          <li>
+            <Link to="/react-hook-form">React Hook Form</Link>
           </li>
         </ul>
       </nav>
