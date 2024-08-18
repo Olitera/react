@@ -13,8 +13,8 @@ const validationSchema = Yup.object().shape({
     .matches(/^[A-Z]/, 'Name must start with an uppercase letter')
     .required('Name is required'),
   age: Yup.number()
-    .min(0, 'Age must be a positive number')
-    .required('Age is required'),
+    .required('Age is required')
+    .min(0, 'Age must be a positive number'),
   email: Yup.string()
     .email('Invalid email address')
     .required('Email is required'),
@@ -45,7 +45,7 @@ const HookForm: React.FC = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid, isSubmitted },
     control,
   } = useForm({
     resolver: yupResolver(validationSchema),
@@ -141,7 +141,9 @@ const HookForm: React.FC = () => {
       </datalist>
       {errors.country && <div className="error">{errors.country.message}</div>}
 
-      <button type="submit">Submit</button>
+      <button type="submit" disabled={!isValid && isSubmitted}>
+        Submit
+      </button>
     </form>
   );
 };

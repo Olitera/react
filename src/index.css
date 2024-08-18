@@ -67,7 +67,8 @@ button:focus-visible {
 }
 
 .uncontrolled-form {
-  width: 40%;
+  width: 45%;
+  height: fit-content;
   display: flex;
   flex-direction: column;
   gap: 15px;
@@ -78,7 +79,8 @@ button:focus-visible {
 }
 
 .hook-form {
-  width: 40%;
+  width: 45%;
+  height: fit-content;
   display: flex;
   flex-direction: column;
   gap: 15px;

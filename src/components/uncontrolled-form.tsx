@@ -86,13 +86,11 @@ const UncontrolledForm: React.FC = () => {
     }
   };
 
-  const handleSubmit = async () => {
+  const validateForm = async () => {
     let base64Picture = '';
     if (pictureRef.current?.files?.[0]) {
       const file = pictureRef.current.files[0];
-      console.log('File type:', file.type);
-      console.log('File size:', file.size);
-      base64Picture = await handleFileToBase64(pictureRef.current.files[0]);
+      base64Picture = await handleFileToBase64(file);
     }
 
     const formData: FormData = {
@@ -112,10 +110,8 @@ const UncontrolledForm: React.FC = () => {
     try {
       await validationSchema.validate(formData, { abortEarly: false });
       setErrors({});
-      dispatch(setUncontrolledFormData(formData));
-      navigate('/');
+      return formData;
     } catch (validationError) {
-      console.error('Form validation failed');
       const errorMessages: { [key: string]: string } = {};
       if (validationError instanceof Yup.ValidationError) {
         validationError.inner.forEach((error) => {
@@ -128,6 +124,14 @@ const UncontrolledForm: React.FC = () => {
     }
   };
 
+  const handleSubmit = async () => {
+    const formData = await validateForm();
+    if (formData) {
+      dispatch(setUncontrolledFormData(formData));
+      navigate('/');
+    }
+  };
+
   const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     void handleSubmit();
@@ -135,24 +139,35 @@ const UncontrolledForm: React.FC = () => {
 
   return (
     <form onSubmit={handleFormSubmit} className="uncontrolled-form">
+      <div></div>
       <label htmlFor="name">Name</label>
-      <input type="text" id="name" ref={nameRef} />
+      <input type="text" id="name" ref={nameRef} onChange={validateForm} />
       {errors.name && <div className="error">{errors.name}</div>}
 
       <label htmlFor="age">Age</label>
-      <input type="number" id="age" ref={ageRef} />
+      <input type="number" id="age" ref={ageRef} onChange={validateForm} />
       {errors.age && <div className="error">{errors.age}</div>}
 
       <label htmlFor="email">Email</label>
-      <input type="email" id="email" ref={emailRef} />
+      <input type="email" id="email" ref={emailRef} onChange={validateForm} />
       {errors.email && <div className="error">{errors.email}</div>}
 
       <label htmlFor="password">Password</label>
-      <input type="password" id="password" ref={passwordRef} />
+      <input
+        type="password"
+        id="password"
+        ref={passwordRef}
+        onChange={validateForm}
+      />
       {errors.password && <div className="error">{errors.password}</div>}
 
       <label htmlFor="confirmPassword">Confirm password</label>
-      <input type="password" id="confirmPassword" ref={confirmPasswordRef} />
+      <input
+        type="password"
+        id="confirmPassword"
+        ref={confirmPasswordRef}
+        onChange={validateForm}
+      />
       {errors.confirmPassword && (
         <div className="error">{errors.confirmPassword}</div>
       )}
@@ -166,17 +181,29 @@ const UncontrolledForm: React.FC = () => {
       {errors.gender && <div className="error">{errors.gender}</div>}
 
       <label>
-        <input type="checkbox" ref={tncRef} />
+        <input type="checkbox" ref={tncRef} onChange={validateForm} />
         Accept Terms and Conditions
       </label>
       {errors.tnc && <div className="error">{errors.tnc}</div>}
 
       <label htmlFor="picture">Upload Picture</label>
-      <input type="file" id="picture" ref={pictureRef} accept=".png,.jpeg" />
+      <input
+        type="file"
+        id="picture"
+        ref={pictureRef}
+        accept=".png,.jpeg"
+        onChange={validateForm}
+      />
       {errors.picture && <div className="error">{errors.picture}</div>}
 
       <label htmlFor="country">Country</label>
-      <input type="text" id="country" ref={countryRef} list="countryList" />
+      <input
+        type="text"
+        id="country"
+        ref={countryRef}
+        list="countryList"
+        onChange={validateForm}
+      />
       <datalist id="countryList">
         {countries.map((country) => (
           <option key={country} value={country} />
@@ -184,7 +211,9 @@ const UncontrolledForm: React.FC = () => {
       </datalist>
       {errors.country && <div className="error">{errors.country}</div>}
 
-      <button type="submit">Submit</button>
+      <button type="submit" disabled={!!Object.values(errors).length}>
+        Submit
+      </button>
     </form>
   );
 };
