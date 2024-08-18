@@ -44,8 +44,9 @@ const UncontrolledForm: React.FC = () => {
       .matches(/^[A-Z]/, 'Name must start with an uppercase letter')
       .required('Name is required'),
     age: Yup.number()
-      .min(0, 'Age must be a positive number')
-      .required('Age is required'),
+      .test('is-required', 'Age is required', (value) => !!value)
+      .required('Age is required')
+      .min(0, 'Age must be a positive number'),
     email: Yup.string()
       .email('Invalid email address')
       .required('Email is required'),
@@ -64,8 +65,9 @@ const UncontrolledForm: React.FC = () => {
     tnc: Yup.bool()
       .oneOf([true], 'You must accept the Terms and Conditions')
       .required('You must accept the Terms and Conditions'),
-    // picture: Yup.mixed()
-    // .required('Picture is required')
+    picture: Yup.mixed()
+      .required('Picture is required')
+      .test('is-required', 'Picture is required', (value) => !!value),
     country: Yup.string()
       .oneOf(countries, 'Please select a valid country')
       .required('Country is required'),
@@ -95,7 +97,7 @@ const UncontrolledForm: React.FC = () => {
 
     const formData: FormData = {
       name: nameRef.current?.value,
-      age: ageRef.current?.valueAsNumber,
+      age: +ageRef.current?.value,
       email: emailRef.current?.value,
       password: passwordRef.current?.value,
       confirmPassword: confirmPasswordRef.current?.value,

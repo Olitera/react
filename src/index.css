@@ -20,7 +20,7 @@
 a {
   font-weight: 500;
   font-size: 32px;
-  color: #c7b408;;
+  color: #c7b408;
   text-decoration: inherit;
 }
 a:hover {
@@ -105,7 +105,7 @@ button:focus-visible {
 }
 
 .highlighted {
-  background-color: #c7b408;;
+  background-color: #c7b408;
 }
 
 .error {

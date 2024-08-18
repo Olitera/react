@@ -13,6 +13,7 @@ const validationSchema = Yup.object().shape({
     .matches(/^[A-Z]/, 'Name must start with an uppercase letter')
     .required('Name is required'),
   age: Yup.number()
+    .test('is-required', 'Age is required', (value) => !!value)
     .required('Age is required')
     .min(0, 'Age must be a positive number'),
   email: Yup.string()
@@ -33,8 +34,11 @@ const validationSchema = Yup.object().shape({
   tnc: Yup.bool()
     .oneOf([true], 'You must accept the Terms and Conditions')
     .required('You must accept the Terms and Conditions'),
-  picture: Yup.mixed().required('Picture is required'),
-
+  picture: Yup.mixed()
+    .required('Picture is required')
+    .test('is-required', 'Picture is required', (value) => {
+      return !!(value as FileList).length;
+    }),
   country: Yup.string().required('Country is required'),
 });
 
@@ -52,9 +56,9 @@ const HookForm: React.FC = () => {
   });
 
   const onFormSubmit = (data: FormData) => {
-    if (data.picture instanceof File) {
+    if (data.picture instanceof FileList && data.picture.length > 0) {
       const reader = new FileReader();
-      reader.readAsDataURL(data.picture);
+      reader.readAsDataURL(data.picture[0]);
       reader.onload = () => {
         const base64Picture = reader.result as string;
         const formData = { ...data, picture: base64Picture };
@@ -80,7 +84,11 @@ const HookForm: React.FC = () => {
       {errors.name && <div className="error">{errors.name.message}</div>}
 
       <label htmlFor="age">Age</label>
-      <input type="number" id="age" {...register('age')} />
+      <input
+        type="number"
+        id="age"
+        {...register('age', { setValueAs: (value) => +value })}
+      />
       {errors.age && <div className="error">{errors.age.message}</div>}
 
       <label htmlFor="email">Email</label>

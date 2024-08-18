@@ -40,7 +40,7 @@ const MainComponent: React.FC = () => {
         <p>Gender: {item.gender}</p>
         <p>Country: {item.country}</p>
         <p>Accept T&C : {item.tnc ? 'Yes' : 'No'}</p>
-        {/*<img src={item.picture} alt="uploaded" width="100" />*/}
+        <img src={item.picture as string} alt="uploaded" width="100" />
       </div>
     ));
 
