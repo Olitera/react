@@ -203,6 +203,7 @@ const UncontrolledForm: React.FC = () => {
         ref={countryRef}
         list="countryList"
         onChange={validateForm}
+        autoComplete="on"
       />
       <datalist id="countryList">
         {countries.map((country) => (

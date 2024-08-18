@@ -131,7 +131,13 @@ const HookForm: React.FC = () => {
         control={control}
         name="country"
         render={({ field }) => (
-          <input type="text" id="country" list="countryList" {...field} />
+          <input
+            type="text"
+            id="country"
+            list="countryList"
+            {...field}
+            autoComplete="on"
+          />
         )}
       />
       <datalist id="countryList">
